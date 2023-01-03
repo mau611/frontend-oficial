@@ -1,0 +1,18 @@
+body {
+    font-family: 'Lato', sans-serif;
+  }
+  
+  .jumbotron {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+    color: white;
+    background-color: #155E30;
+  }
+
+  .btn{
+    width: 6cm;
+    margin-top: 0.4cm;
+  }
+  
