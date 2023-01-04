@@ -279,7 +279,7 @@ const Agenda = () => {
 					endAccessor="end"
 					onSelectSlot={handleSelectSlot}
 					onSelectEvent={onSelectEvent}
-					style={{ height: 700 }}
+					style={{ height: 1000 }}
 					eventPropGetter={eventPropGetter}
 					selectable
 				/>
