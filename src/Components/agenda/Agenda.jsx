@@ -11,6 +11,7 @@ import React, {
 	useCallback,
 	useEffect,
 	useMemo,
+	useRef,
 	useState,
 } from "react";
 import axios from "axios";
@@ -26,6 +27,7 @@ import {
 	TextField,
 } from "@mui/material";
 import NavBar from "../estructura/NavBar";
+import { useNavigate } from "react-router-dom";
 require('globalize/lib/cultures/globalize.culture.es')
 
 const endpoint = "http://localhost:8000/api";
@@ -43,7 +45,7 @@ const lang = {
     day: 'Día',
     month: 'Mes',
     previous: 'Atrás',
-    next: 'Después',
+    next: 'Adelante',
     today: 'Hoy',
     agenda: 'Lista de citas',
     noEventsInRange: 'No existen citas en este intervalo.',
@@ -77,7 +79,9 @@ const lang = {
 }
 
 const Agenda = () => {
-  const [culture, setCulture] = useState('es')
+  const [eventosBD, setEventosBD] = useState([]);
+  const [eventosProcesados, setEventosProcesados] = useState([]);
+  const [culture, setCulture] = useState('es');
 	const [gabinetes, setGabinetes] = useState([]);
 	const [myEvents, setEvents] = useState([]);
 	const [open, setOpen] = useState(false);
@@ -89,6 +93,9 @@ const Agenda = () => {
 	const [estadoCita, setEstadoCita] = useState(null);
 	const [detalleTratamiento, setDetalleTratamiento] = useState("");
 	const [detalleEvento, setDetalleEvento] = useState("");
+  const dataFetchedRef = useRef(false);
+
+  const navigate = useNavigate();
 
 	const handleClickOpen = (detallesEvento) => {
 		setDetalleEvento(detallesEvento);
@@ -122,23 +129,28 @@ const Agenda = () => {
 	};
 
 	useEffect(() => {
+    if (dataFetchedRef.current) return;
+      dataFetchedRef.current = true;
+    console.log("effect")
 		getGabinetes();
 		getPacientes();
 		getTipoConsultas();
 		getEstadoCitas();
+    getEventosBD();
 	}, []);
+
+  const getEventosBD = async () =>{
+		const response = await axios.get(`${endpoint}/consultas`);
+    response.data.map((ev)=>{
+      setEvents((prev) => [...prev, { start: new Date(ev.start), end: new Date(ev.end), title: ev.title, resourceId: ev.consultorio_id}])
+    })
+  }
 
 	const localizer = momentLocalizer(moment);
 	const handleSelectSlot = useCallback(
 		({ start, end, title, resourceId }) => {
 			handleClickOpen({ start, end, resourceId });
-			//const title = window.prompt("Nombre evento");
-			//if (title) {
-			//  setEvents((prev) => [...prev, { start, end, title, resourceId}]);
-			//  console.log(start);
-			//}
 		},
-		[setEvents]
 	);
 
 	const handleSelectEvent = useCallback(
@@ -164,9 +176,9 @@ const Agenda = () => {
 			end: "" + new Date(detalleEvento.end).toISOString(),
 			estado: estadoCita,
 			id: detalleEvento.resourceId,
-			paciente_id: p.split[0],
-			tipoConsulta_id: tc.split[0],
-			estadoConsulta_id: ec.split[0],
+			paciente_id: p.split(" ")[0],
+			tipoConsulta_id: tc.split(" ")[0],
+			estadoConsulta_id: ec.split(" ")[0],
 		});
 		handleClose();
 	};
