@@ -28,60 +28,61 @@ import {
 } from "@mui/material";
 import NavBar from "../estructura/NavBar";
 import { useNavigate } from "react-router-dom";
-require('globalize/lib/cultures/globalize.culture.es')
+import { buildWarning } from "@mui/x-data-grid/internals";
+require("globalize/lib/cultures/globalize.culture.es");
 
 const endpoint = "http://localhost:8000/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const cultures = ['en', 'en-GB', 'es', 'fr', 'ar-AE']
+const cultures = ["en", "en-GB", "es", "fr", "ar-AE"];
 const lang = {
-  en: null,
-  'en-GB': null,
-  es: {
-    week: 'Semana',
-    work_week: 'Semana de trabajo',
-    day: 'Día',
-    month: 'Mes',
-    previous: 'Atrás',
-    next: 'Adelante',
-    today: 'Hoy',
-    agenda: 'Lista de citas',
-    noEventsInRange: 'No existen citas en este intervalo.',
+	en: null,
+	"en-GB": null,
+	es: {
+		week: "Semana",
+		work_week: "Semana de trabajo",
+		day: "Día",
+		month: "Mes",
+		previous: "Atrás",
+		next: "Adelante",
+		today: "Hoy",
+		agenda: "Lista de citas",
+		noEventsInRange: "No existen citas en este intervalo.",
 
-    showMore: (total) => `+${total} más`,
-  },
-  fr: {
-    week: 'La semaine',
-    work_week: 'Semaine de travail',
-    day: 'Jour',
-    month: 'Mois',
-    previous: 'Antérieur',
-    next: 'Prochain',
-    today: `Aujourd'hui`,
-    agenda: 'Ordre du jour',
+		showMore: (total) => `+${total} más`,
+	},
+	fr: {
+		week: "La semaine",
+		work_week: "Semaine de travail",
+		day: "Jour",
+		month: "Mois",
+		previous: "Antérieur",
+		next: "Prochain",
+		today: `Aujourd'hui`,
+		agenda: "Ordre du jour",
 
-    showMore: (total) => `+${total} plus`,
-  },
-  'ar-AE': {
-    week: 'أسبوع',
-    work_week: 'أسبوع العمل',
-    day: 'يوم',
-    month: 'شهر',
-    previous: 'سابق',
-    next: 'التالي',
-    today: 'اليوم',
-    agenda: 'جدول أعمال',
+		showMore: (total) => `+${total} plus`,
+	},
+	"ar-AE": {
+		week: "أسبوع",
+		work_week: "أسبوع العمل",
+		day: "يوم",
+		month: "شهر",
+		previous: "سابق",
+		next: "التالي",
+		today: "اليوم",
+		agenda: "جدول أعمال",
 
-    showMore: (total) => `+${total} إضافي`,
-  },
-}
+		showMore: (total) => `+${total} إضافي`,
+	},
+};
 
 const Agenda = () => {
-  const [eventosBD, setEventosBD] = useState([]);
-  const [eventosProcesados, setEventosProcesados] = useState([]);
-  const [culture, setCulture] = useState('es');
+	const [eventosBD, setEventosBD] = useState([]);
+	const [eventosProcesados, setEventosProcesados] = useState([]);
+	const [culture, setCulture] = useState("es");
 	const [gabinetes, setGabinetes] = useState([]);
 	const [myEvents, setEvents] = useState([]);
 	const [open, setOpen] = useState(false);
@@ -93,13 +94,19 @@ const Agenda = () => {
 	const [estadoCita, setEstadoCita] = useState(null);
 	const [detalleTratamiento, setDetalleTratamiento] = useState("");
 	const [detalleEvento, setDetalleEvento] = useState("");
-  const dataFetchedRef = useRef(false);
+	const dataFetchedRef = useRef(false);
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+  const clickRef = useRef(null)
 
 	const handleClickOpen = (detallesEvento) => {
 		setDetalleEvento(detallesEvento);
 		setOpen(true);
+	};
+
+	const nombrePaciente = (pacId) => {
+		console.log(pacientes);
+		return pacientes.filter((paciente) => paciente.id === pacId)[0] || {};
 	};
 
 	const handleClose = () => {
@@ -129,29 +136,36 @@ const Agenda = () => {
 	};
 
 	useEffect(() => {
-    if (dataFetchedRef.current) return;
-      dataFetchedRef.current = true;
-    console.log("effect")
+		if (dataFetchedRef.current) return;
+		dataFetchedRef.current = true;
+		console.log("effect");
 		getGabinetes();
 		getPacientes();
 		getTipoConsultas();
 		getEstadoCitas();
-    getEventosBD();
+		getEventosBD();
+    window.clearTimeout(clickRef?.current)
 	}, []);
 
-  const getEventosBD = async () =>{
+	const getEventosBD = async () => {
 		const response = await axios.get(`${endpoint}/consultas`);
-    response.data.map((ev)=>{
-      setEvents((prev) => [...prev, { start: new Date(ev.start), end: new Date(ev.end), title: ev.title, resourceId: ev.consultorio_id}])
-    })
-  }
+		response.data.map((ev) => {
+			setEvents((prev) => [
+				...prev,
+				{
+					start: new Date(ev.start),
+					end: new Date(ev.end),
+					title: ev.title,
+					resourceId: ev.consultorio_id,
+				},
+			]);
+		});
+	};
 
 	const localizer = momentLocalizer(moment);
-	const handleSelectSlot = useCallback(
-		({ start, end, title, resourceId }) => {
-			handleClickOpen({ start, end, resourceId });
-		},
-	);
+	const handleSelectSlot = useCallback(({ start, end, title, resourceId }) => {
+		handleClickOpen({ start, end, resourceId });
+	});
 
 	const handleSelectEvent = useCallback(
 		(event) => window.alert(event.title),
@@ -162,10 +176,25 @@ const Agenda = () => {
 		() => ({
 			defaultDate: new Date(),
 			scrollToTime: new Date(1970, 1, 1, 6),
-      messages: lang[culture],
+			messages: lang[culture],
 		}),
 		[]
 	);
+
+	const onSelectEvent = useCallback((calEvent) => {
+		/**
+		 * Here we are waiting 250 milliseconds (use what you want) prior to firing
+		 * our method. Why? Because both 'click' and 'doubleClick'
+		 * would fire, in the event of a 'doubleClick'. By doing
+		 * this, the 'click' handler is overridden by the 'doubleClick'
+		 * action.
+		 */
+		window.clearTimeout(clickRef?.current);
+		clickRef.current = window.setTimeout(() => {
+			window.alert(buildWarning(calEvent, "onSelectEvent"));
+		}, 250);
+	}, []);
+
 	const handleGuardar = async () => {
 		const p = "" + paciente;
 		const tc = "" + tipoConsulta;
@@ -188,11 +217,11 @@ const Agenda = () => {
 			<hr />
 			<Fragment>
 				<Calendar
-          min={new Date(1972, 0, 1, 6, 0, 0, 0)}
-          max={new Date(0, 0, 1, 20, 30, 0, 0)}
-          step={30}
-          messages={messages}
-          culture={culture}
+					min={new Date(1972, 0, 1, 6, 0, 0, 0)}
+					max={new Date(0, 0, 1, 20, 30, 0, 0)}
+					step={30}
+					messages={messages}
+					culture={culture}
 					resourceTitleAccessor={"nombre"}
 					resources={gabinetes}
 					events={myEvents}
@@ -202,6 +231,7 @@ const Agenda = () => {
 					startAccessor="start"
 					endAccessor="end"
 					onSelectSlot={handleSelectSlot}
+          onSelectEvent={onSelectEvent}
 					style={{ height: 700 }}
 					selectable
 				/>
@@ -218,7 +248,7 @@ const Agenda = () => {
 						</DialogContentText>
 						<br />
 						<Autocomplete
-              required
+							required
 							freeSolo
 							id="pacientes"
 							value={paciente}
@@ -241,7 +271,7 @@ const Agenda = () => {
 						/>
 						<br />
 						<TextField
-              required
+							required
 							onChange={(e) => setDetalleTratamiento(e.target.value)}
 							value={detalleTratamiento}
 							id="detallesTratamiento"
@@ -253,7 +283,7 @@ const Agenda = () => {
 						<br />
 						<br />
 						<Autocomplete
-              required
+							required
 							freeSolo
 							id="TipoConsulta"
 							value={tipoConsulta}
@@ -275,7 +305,7 @@ const Agenda = () => {
 						/>
 						<br />
 						<Autocomplete
-              required
+							required
 							freeSolo
 							id="estadoCita"
 							value={estadoCita}
@@ -307,8 +337,5 @@ const Agenda = () => {
 };
 
 export default Agenda;
-
-
-
 
 //marta carrillo stiletto 17:00 facial
