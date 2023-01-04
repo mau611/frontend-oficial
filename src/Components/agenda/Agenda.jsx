@@ -96,8 +96,54 @@ const Agenda = () => {
 	const [detalleEvento, setDetalleEvento] = useState("");
 	const dataFetchedRef = useRef(false);
 
+	const eventPropGetter = useCallback(
+		(event, start, end, isSelected) => ({
+			...(isSelected && {
+				style: {
+					backgroundColor: "#63A355",
+				},
+			}),
+			...((event.resourceId === 1) && {
+				style: {
+					backgroundColor: "#017745",
+				},
+			}),
+      ...((event.resourceId === 2) && {
+				style: {
+					backgroundColor: "#00A77B",
+				},
+			}),
+      ...((event.resourceId === 3) && {
+				style: {
+					backgroundColor: "#A6D47C",
+				},
+			}),
+      ...((event.resourceId === 4) && {
+				style: {
+					backgroundColor: "#AE64C7",
+				},
+			}),
+      ...((event.resourceId === 5) && {
+				style: {
+					backgroundColor: "#9bd3ae",
+				},
+			}),
+      ...((event.resourceId === 6) && {
+				style: {
+					backgroundColor: "#FF807A",
+				},
+			}),
+      ...((event.resourceId === 7) && {
+				style: {
+					backgroundColor: "#8A2C47",
+				},
+			}),
+		}),
+		[]
+	);
+
 	const navigate = useNavigate();
-  const clickRef = useRef(null)
+	const clickRef = useRef(null);
 
 	const handleClickOpen = (detallesEvento) => {
 		setDetalleEvento(detallesEvento);
@@ -144,7 +190,7 @@ const Agenda = () => {
 		getTipoConsultas();
 		getEstadoCitas();
 		getEventosBD();
-    window.clearTimeout(clickRef?.current)
+		window.clearTimeout(clickRef?.current);
 	}, []);
 
 	const getEventosBD = async () => {
@@ -210,6 +256,7 @@ const Agenda = () => {
 			estadoConsulta_id: ec.split(" ")[0],
 		});
 		handleClose();
+    navigate(0);
 	};
 	return (
 		<NavBar>
@@ -231,8 +278,9 @@ const Agenda = () => {
 					startAccessor="start"
 					endAccessor="end"
 					onSelectSlot={handleSelectSlot}
-          onSelectEvent={onSelectEvent}
+					onSelectEvent={onSelectEvent}
 					style={{ height: 700 }}
+					eventPropGetter={eventPropGetter}
 					selectable
 				/>
 				<Dialog
