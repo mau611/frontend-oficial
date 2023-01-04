@@ -218,6 +218,7 @@ const Agenda = () => {
 						</DialogContentText>
 						<br />
 						<Autocomplete
+              required
 							freeSolo
 							id="pacientes"
 							value={paciente}
@@ -240,6 +241,7 @@ const Agenda = () => {
 						/>
 						<br />
 						<TextField
+              required
 							onChange={(e) => setDetalleTratamiento(e.target.value)}
 							value={detalleTratamiento}
 							id="detallesTratamiento"
@@ -251,6 +253,7 @@ const Agenda = () => {
 						<br />
 						<br />
 						<Autocomplete
+              required
 							freeSolo
 							id="TipoConsulta"
 							value={tipoConsulta}
@@ -272,8 +275,9 @@ const Agenda = () => {
 						/>
 						<br />
 						<Autocomplete
+              required
 							freeSolo
-							id="TipoConsulta"
+							id="estadoCita"
 							value={estadoCita}
 							onChange={(e, value) => setEstadoCita(value)}
 							disableClearable
