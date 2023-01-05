@@ -57,6 +57,9 @@ const ProductosVenta = () => {
         <Button variant="outlined" onClick={handleClickOpen}>
           Agregar Producto
         </Button>
+        <Button variant="outlined" onClick={handleClickOpen}>
+          Actualizar Producto
+        </Button>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Creacion de producto</DialogTitle>
           <DialogContent>
