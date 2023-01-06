@@ -46,12 +46,13 @@ const Proveedores = () => {
 
   const [proveedores, setProveedores] = useState([]);
   useEffect(() => {
-    getGabinetes();
+    getProveedores();
   }, []);
 
-  const getGabinetes = async () => {
+  const getProveedores = async () => {
     const response = await axios.get(`${endpoint}/proveedores`);
     setProveedores(response.data);
+    console.log(response.data)
   };
 
   const handleSubmit = async (e) => {
