@@ -9,7 +9,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { Paper, Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Columnas = [
 	{ field: "id", headerName: "ID" },
@@ -23,6 +25,7 @@ const endpoint = "http://localhost:8000/api";
 const Proveedores = () => {
 	const [state, setState] = useState({
 		nombre: "",
+		contacto:"",
 	});
 	const handleChange = (value, name) => {
 		console.log(value);
@@ -61,6 +64,7 @@ const Proveedores = () => {
 		e.preventDefault();
 		await axios.post(`${endpoint}/proveedor`, {
 			nombre: state.nombre,
+			contacto: state.contacto
 		});
 		navigate(0);
 	};
@@ -68,30 +72,41 @@ const Proveedores = () => {
 	return (
 		<div style={{ height: 500, width: "100%" }}>
 			<Paper sx={{ width: "100%", overflow: "hidden" }}>
-				<TableContainer sx={{ maxHeight: 440 }}>
-					<Table stickyHeader aria-label="sticky table">
+				<br />
+				<TableContainer>
+					<Table sx={{ minWidth: 650 }} aria-label="sticky table" stickyHeader >
 						<TableHead>
 							<TableRow>
-								{Columnas.map((column) => (
-									<TableCell
-										key={column.id}
-										align={column.align}
-										style={{ minWidth: column.minWidth }}>
-										{column.label}
-									</TableCell>
-								))}
+								<TableCell>ID</TableCell>
+								<TableCell>Proveedor</TableCell>
+								<TableCell>Contacto</TableCell>
+								<TableCell>Accion</TableCell>
 							</TableRow>
 						</TableHead>
+						<TableBody>
+							{proveedores.map((proveedor) => (
+								<TableRow
+									key={proveedor.id} 
+									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+								>
+									<TableCell component="th" scope="row"> {proveedor.id} </TableCell>
+									<TableCell align=""> {proveedor.nombre} </TableCell>
+									<TableCell align=""> {proveedor.contacto} </TableCell>
+									<TableCell>
+										<IconButton aria-label="delete">
+											<EditIcon color="secondary"/>
+										</IconButton>
+										<IconButton aria-label="delete">
+											<DeleteIcon color="error"/>
+										</IconButton>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
 					</Table>
 				</TableContainer>
 			</Paper>
-			<DataGrid
-				rows={proveedores}
-				columns={Columnas}
-				pageSize={10}
-				rowsPerPageOptions={[10]}
-				checkboxSelection
-			/>
+			<br />
 			<div>
 				<Button variant="outlined" onClick={handleClickOpen}>
 					Agregar proveedor
@@ -109,6 +124,17 @@ const Proveedores = () => {
 							fullWidth
 							variant="standard"
 							onChange={(e) => handleChange(e.target.value, "nombre")}
+						/>
+						<TextField
+							autoFocus
+							value={state.contacto}
+							margin="dense"
+							id="contacto"
+							label="Contacto"
+							type="text"
+							fullWidth
+							variant="standard"
+							onChange={(e) => handleChange(e.target.value, "contacto")}
 						/>
 					</DialogContent>
 					<DialogActions>

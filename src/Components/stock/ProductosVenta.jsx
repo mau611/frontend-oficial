@@ -5,12 +5,21 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogTitle,
+	IconButton,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
 	TextField,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { Fragment, useState, setState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
 
 const Columnas = [
 	{ field: "id", headerName: "ID", width: 50 },
@@ -134,13 +143,66 @@ const ProductosVenta = () => {
 		<Fragment>
 			<div>Productos Venta</div>
 			<div style={{ height: 600, width: "100%" }}>
-				<DataGrid
-					columns={Columnas}
-					rows={datos}
-					pageSize={10}
-					rowsPerPageOptions={[10]}
-					checkboxSelection
-				/>
+				<TableContainer component={Paper}>
+					<Table sx={{ minWidth: 650 }} aria-label="simple table">
+						<TableHead>
+							<TableRow>
+								<TableCell>ID</TableCell>
+								<TableCell>Producto</TableCell>
+								<TableCell>Descripcion</TableCell>
+								<TableCell>Proveedor</TableCell>
+								<TableCell>Fecha ingreso</TableCell>
+								<TableCell>Precio Compra</TableCell>
+								<TableCell>Precio Venta</TableCell>
+								<TableCell>Existencias</TableCell>
+								<TableCell>Acciones</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{productos.map((row) => (
+								<TableRow key={row.name}
+								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+								>
+									<TableCell component="th" scope="row">
+										{row.id}
+									</TableCell>
+									<TableCell align="">{row.Nombre}</TableCell>
+									<TableCell align="">{row.descripcion}</TableCell>
+									<TableCell align="">{row.proveedor.nombre}</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.fecha}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.PrecioCompra}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.PrecioVenta}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.cantidad}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>
+												<IconButton aria-label="delete">
+													<EditIcon fontSize="small" color="secondary"/>
+												</IconButton>
+											</p>
+										))}
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
 			</div>
 			<div>
 				<Button variant="outlined" onClick={handleClickOpen}>
