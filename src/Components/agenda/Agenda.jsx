@@ -1,9 +1,4 @@
-import {
-  Calendar,
-  Views,
-  DateLocalizer,
-  momentLocalizer,
-} from "react-big-calendar";
+import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import React, {
@@ -23,12 +18,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
   Slide,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import NavBar from "../estructura/NavBar";
 import { useNavigate } from "react-router-dom";
-import { buildWarning } from "@mui/x-data-grid/internals";
+import DatosPaciente from "./ComponentesPaciente/DatosPaciente";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 require("globalize/lib/cultures/globalize.culture.es");
 
 const endpoint = "http://localhost:8000/api";
@@ -80,8 +79,6 @@ const lang = {
 };
 
 const Agenda = () => {
-  const [eventosBD, setEventosBD] = useState([]);
-  const [eventosProcesados, setEventosProcesados] = useState([]);
   const [culture, setCulture] = useState("es");
   const [gabinetes, setGabinetes] = useState([]);
   const [myEvents, setEvents] = useState([]);
@@ -95,6 +92,10 @@ const Agenda = () => {
   const [detalleTratamiento, setDetalleTratamiento] = useState("");
   const [detalleEvento, setDetalleEvento] = useState("");
   const dataFetchedRef = useRef(false);
+  const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
+  const [auxPaciente, setAuxPaciente] = useState({});
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const eventPropGetter = useCallback(
     (event, start, end, isSelected) => ({
@@ -149,10 +150,18 @@ const Agenda = () => {
     setDetalleEvento(detallesEvento);
     setOpen(true);
   };
+  const handleClickOpenDetallePaciente = (pacienteEvento) => {
+    getPacienteCita(pacienteEvento);
+    setOpenDetallePaciente(true);
+  };
 
-  const nombrePaciente = (pacId) => {
-    console.log(pacientes);
-    return pacientes.filter((paciente) => paciente.id === pacId)[0] || {};
+  const handleCloseDetallePaciente = () => {
+    setOpenDetallePaciente(false);
+    setAuxPaciente({});
+  };
+
+  const getPacienteCita = (paciente) => {
+    setAuxPaciente(paciente);
   };
 
   const handleClose = () => {
@@ -229,6 +238,7 @@ const Agenda = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
+    console.log(calEvent)
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
@@ -236,10 +246,7 @@ const Agenda = () => {
      * this, the 'click' handler is overridden by the 'doubleClick'
      * action.
      */
-    window.clearTimeout(clickRef?.current);
-    clickRef.current = window.setTimeout(() => {
-      window.alert(buildWarning(calEvent, "onSelectEvent"));
-    }, 250);
+    handleClickOpenDetallePaciente(calEvent.paciente);
   }, []);
 
   const handleGuardar = async () => {
@@ -285,6 +292,7 @@ const Agenda = () => {
           selectable
         />
         <Dialog
+          fullScreen={fullScreen}
           open={open}
           TransitionComponent={Transition}
           keepMounted
@@ -381,6 +389,64 @@ const Agenda = () => {
             <Button onClick={handleGuardar}>Guardar Cita</Button>
           </DialogActions>
         </Dialog>
+        <div>
+          <Dialog
+            fullScreen={fullScreen}
+            open={openDetallePaciente}
+            onClose={handleCloseDetallePaciente}
+          >
+            <DialogTitle>{auxPaciente.nombres}</DialogTitle>
+            <DialogContent>
+              <DatosPaciente paciente={auxPaciente} />
+              <br />
+              <div>
+                <TextField
+                  id="outlined-basic"
+                  label="Cobrar"
+                  variant="outlined"
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Monto"
+                  variant="outlined"
+                  style={{ width: 80 }}
+                />
+                <IconButton aria-label="add to favorites">
+                  <PriceCheckIcon />
+                </IconButton>
+              </div>
+              <br />
+              <div>
+                <TextField
+                  id="outlined-basic"
+                  label="Crear Bono"
+                  variant="outlined"
+                  style={{ width: 145 }}
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Sesiones"
+                  type={"number"}
+                  variant="outlined"
+                  style={{ width: 80 }}
+                />
+                <TextField
+                  id="outlined-basic"
+                  label="Monto"
+                  variant="outlined"
+                  style={{ width: 80 }}
+                />
+                <IconButton aria-label="add to favorites">
+                  <PriceCheckIcon />
+                </IconButton>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDetallePaciente}>Cancel</Button>
+              <Button onClick={handleCloseDetallePaciente}>Subscribe</Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </Fragment>
     </NavBar>
   );
