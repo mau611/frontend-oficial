@@ -19,6 +19,7 @@ import axios from "axios";
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 
 const endpoint = "http://localhost:8000/api";
 
@@ -183,6 +184,9 @@ const ProductosVenta = () => {
                         <IconButton aria-label="delete">
                           <EditIcon fontSize="small" color="secondary" />
                         </IconButton>
+						<IconButton aria-label="delete">
+							<LocalAtmIcon fontSize="small" color="success" />
+						</IconButton>
                       </p>
                     ))}
                   </TableCell>

@@ -203,6 +203,7 @@ const Agenda = () => {
           end: new Date(ev.end),
           title: ev.title,
           resourceId: ev.consultorio_id,
+          paciente: ev.paciente,
         },
       ]);
     });
