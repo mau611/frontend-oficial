@@ -11,6 +11,7 @@ import CrearGabinetes from "../configuracion/gabinetes/CrearGabinetes";
 import CrearTipoConsulta from "./tipoConsultas/CrearTipoConsultas";
 import CrearEstadoCita from "./estadoCitas/CrearEstadoCita";
 import Licenciados from "./licenciados/Licenciados";
+import Servicios from "./servicios/Servicios";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -76,6 +77,7 @@ const Index = () => {
             <Tab label="Tipos de Consulta" {...a11yProps(1)} />
             <Tab label="Estado Citas" {...a11yProps(2)} />
             <Tab label="Licenciados de turno" {...a11yProps(3)} />
+            <Tab label="Servicios" {...a11yProps(4)} />
           </Tabs>
         </AppBar>
         <div>
@@ -90,6 +92,9 @@ const Index = () => {
           </TabPanel>
           <TabPanel value={value} index={3} dir={theme.direction}>
             <Licenciados/>
+          </TabPanel>
+          <TabPanel value={value} index={4} dir={theme.direction}>
+            <Servicios/>
           </TabPanel>
         </div>
       </Box>
