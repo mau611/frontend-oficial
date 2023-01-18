@@ -94,10 +94,6 @@ const Agenda = () => {
   const dataFetchedRef = useRef(false);
   const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
   const [auxPaciente, setAuxPaciente] = useState({});
-  const [cobro, setCobro] = useState({
-    servicio: "",
-    monto:0
-  });
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -408,14 +404,12 @@ const Agenda = () => {
                   id="outlined-basic"
                   label="Cobrar"
                   variant="outlined"
-                  value={cobro.servicio}
                 />
                 <TextField
                   id="outlined-basic"
                   label="Monto"
                   variant="outlined"
                   style={{ width: 80 }}
-                  value={cobro.monto}
                 />
                 <IconButton aria-label="add to favorites">
                   <PriceCheckIcon />

@@ -69,7 +69,8 @@ const Servicios = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		await axios.post(`${endpoint}/servicio`, {
-			nombre: state.nombre,
+			servicio: state.servicio,
+			costo:state.costo
 		});
 		navigate(0);
 	};
@@ -96,7 +97,6 @@ const Servicios = () => {
 									<TableCell component="th" scope="row">
 										{row.id}
 									</TableCell>
-									<TableCell align="">{row.id}</TableCell>
 									<TableCell align="">{row.servicio}</TableCell>
 									<TableCell align="">{row.costo}</TableCell>
 									<TableCell>
@@ -125,8 +125,8 @@ const Servicios = () => {
 							value={state.servicio}
 							autoFocus
 							margin="dense"
-							id="nombre"
-							label="Nombre"
+							id="servicio"
+							label="Servicio"
 							type="text"
 							fullWidth
 							variant="standard"
@@ -143,67 +143,10 @@ const Servicios = () => {
 							variant="standard"
 							onChange={(e) => handleChange(e.target.value, "costo")}
 						/>
-						<br />
-						<Autocomplete
-							clearOnEscape
-							required
-							freeSolo
-							id="servicio"
-							value={state.servicio}
-							onChange={(e, value) => handleChange(value, "proveedor")}
-							disableClearable
-							options={servicios.map(
-								(option) => option.id + " -  " + option.nombre
-							)}
-							renderInput={(params) => (
-								<TextField
-									{...params}
-									label="Servicio"
-									InputProps={{
-										...params.InputProps,
-										type: "search",
-									}}
-									variant="standard"
-								/>
-							)}
-						/>
-						<TextField
-							value={state.precioCompra}
-							autoFocus
-							margin="dense"
-							id="compra"
-							label="Precio Compra"
-							type="text"
-							fullWidth
-							variant="standard"
-							onChange={(e) => handleChange(e.target.value, "precioCompra")}
-						/>
-						<TextField
-							value={state.precioVenta}
-							autoFocus
-							margin="dense"
-							id="venta"
-							label="Precio Venta"
-							type="text"
-							fullWidth
-							variant="standard"
-							onChange={(e) => handleChange(e.target.value, "precioVenta")}
-						/>
-						<TextField
-							value={state.cantidad}
-							autoFocus
-							margin="dense"
-							id="cantidad"
-							label="Cantidad"
-							type="number"
-							fullWidth
-							variant="standard"
-							onChange={(e) => handleChange(e.target.value, "cantidad")}
-						/>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={handleClose}>Cancelar</Button>
-						<Button >Guardar</Button>
+						<Button onClick={handleSubmit}>Guardar</Button>
 					</DialogActions>
 				</Dialog>
 			</div>
