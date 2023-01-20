@@ -18,7 +18,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Slide,
   TextField,
   useMediaQuery,
@@ -94,6 +98,13 @@ const Agenda = () => {
   const dataFetchedRef = useRef(false);
   const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
   const [auxPaciente, setAuxPaciente] = useState({});
+  const [cobroTratamientos, setCobroTratamientos] = useState([]);
+  const [servicios, setServicios] = useState([]);
+  const [cobro, setCobro] = useState(0);
+  const [estadoPago, setEstadoPago] = useState("");
+  const [detallesPago, setDetallesPago] = useState("");
+  const [tipoDePago, setTipoDePago] = useState("");
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -158,6 +169,8 @@ const Agenda = () => {
   const handleCloseDetallePaciente = () => {
     setOpenDetallePaciente(false);
     setAuxPaciente({});
+    setCobroTratamientos([]);
+    setCobro(0);
   };
 
   const getPacienteCita = (paciente) => {
@@ -170,7 +183,27 @@ const Agenda = () => {
     setEstadoCita("");
     setDetalleTratamiento("");
     setDetalleEvento("");
+    setAuxPaciente({});
+    setCobroTratamientos([]);
     setOpen(false);
+  };
+
+  const handleChangeMultiple = (event) => {
+    const { options } = event.target;
+    const value = [];
+    var valor = 0;
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+        servicios.map((serv) => {
+          if (serv.id == options[i].value) {
+            valor = valor + serv.costo;
+          }
+        });
+      }
+    }
+    setCobroTratamientos(value);
+    setCobro(valor);
   };
 
   const getGabinetes = async () => {
@@ -199,9 +232,14 @@ const Agenda = () => {
     getTipoConsultas();
     getEstadoCitas();
     getEventosBD();
+    getServicios();
     window.clearTimeout(clickRef?.current);
   }, []);
 
+  const getServicios = async () => {
+    const response = await axios.get(`${endpoint}/servicios`);
+    setServicios(response.data);
+  };
   const getEventosBD = async () => {
     const response = await axios.get(`${endpoint}/consultas`);
     response.data.map((ev) => {
@@ -238,7 +276,7 @@ const Agenda = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
-    console.log(calEvent)
+    console.log(calEvent);
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
@@ -248,6 +286,25 @@ const Agenda = () => {
      */
     handleClickOpenDetallePaciente(calEvent.paciente);
   }, []);
+
+  const realizarCobro = async () => {
+    console.log("botohn clickeado")
+    await axios.post(`${endpoint}/servicio`, {
+      fecha:"",
+      numero:"",
+      total:"",
+      estado_pago:"",
+      forma_pago:"",
+      detalles_pago:"",
+      consulta_id:"",
+      nombre:"",
+      cantidad:"",
+      precio:"",
+      subtotal:"",
+      factura_id:"",
+    });
+
+  }
 
   const handleGuardar = async () => {
     const p = "" + paciente;
@@ -399,22 +456,70 @@ const Agenda = () => {
             <DialogContent>
               <DatosPaciente paciente={auxPaciente} />
               <br />
-              <div>
-                <TextField
-                  id="outlined-basic"
-                  label="Cobrar"
-                  variant="outlined"
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Monto"
-                  variant="outlined"
-                  style={{ width: 80 }}
-                />
-                <IconButton aria-label="add to favorites">
-                  <PriceCheckIcon />
-                </IconButton>
-              </div>
+              <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 400 }}>
+                <InputLabel shrink htmlFor="select-multiple-native">
+                  Servicios
+                </InputLabel>
+                <Select
+                  multiple
+                  native
+                  value={cobroTratamientos}
+                  // @ts-ignore Typings are not considering `native`
+                  onChange={handleChangeMultiple}
+                  label="Servicios"
+                  inputProps={{
+                    id: "select-multiple-native",
+                  }}
+                >
+                  {servicios.map((servicio) => (
+                    <option key={servicio.id} value={servicio.id}>
+                      {servicio.servicio}
+                    </option>
+                  ))}
+                </Select>
+                <br />
+                <div>
+                  <TextField
+                    disabled
+                    id="outlined-basic"
+                    label="Costo de la Sesion"
+                    variant="outlined"
+                    style={{ width: 100 }}
+                    value={cobro}
+                  />
+                  <FormControl style={{ width: 200 }}>
+                    <InputLabel id="estado-pago">Estado Pago</InputLabel>
+                    <Select labelId="estado-pago" id="estado-pago" label="Age">
+                      <MenuItem value={"pagado"}>No Pagado</MenuItem>
+                      <MenuItem value={"no pagado"}>Pagado</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    id="outlined-multiline-static"
+                    label="Detalles del pago"
+                    multiline
+                    rows={3}
+                    fullWidth
+                  />
+                  <FormControl fullWidth>
+                    <InputLabel id="forma-pago">Tipo de Pago</InputLabel>
+                    <Select
+                      labelId="forma-pago"
+                      id="forma-pago"
+                      label="Tipo Pago"
+                    >
+                      <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
+                      <MenuItem value={"Transferencia"}>Trasferencia</MenuItem>
+                      <MenuItem value={"Tarjeta de Debito"}>Tarjeta de Debito</MenuItem>
+                      <MenuItem value={"Bono"}>Bono</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <IconButton aria-label="add to favorites" onClick={realizarCobro}>
+                    <PriceCheckIcon />
+                    Realizar cobro
+                  </IconButton>
+                </div>
+              </FormControl>
               <br />
               <div>
                 <TextField
