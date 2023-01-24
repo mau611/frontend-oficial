@@ -65,7 +65,8 @@ const ProductosVenta = () => {
 					precioCompra: obtenerDatos(p.ingresos)[1],
 					precioVenta: obtenerDatos(p.ingresos)[2],
 					cantidad: obtenerDatos(p.ingresos)[3],
-
+					factura: obtenerDatos(p.ingresos)[4],
+					vencimiento: obtenerDatos(p.ingresos)[5]
 				},
 			]);
 		});
