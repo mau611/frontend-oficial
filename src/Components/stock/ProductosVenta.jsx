@@ -32,6 +32,8 @@ const ProductosVenta = () => {
 		precioCompra: "",
 		precioVenta: "",
 		cantidad: "",
+		factura:"",
+		vencimiento:"",
 	});
 	const [proveedores, setProveedores] = useState([]);
 	const [datos, setDatos] = useState([]);
@@ -63,6 +65,7 @@ const ProductosVenta = () => {
 					precioCompra: obtenerDatos(p.ingresos)[1],
 					precioVenta: obtenerDatos(p.ingresos)[2],
 					cantidad: obtenerDatos(p.ingresos)[3],
+
 				},
 			]);
 		});
@@ -91,6 +94,8 @@ const ProductosVenta = () => {
 			dato.push(ingreso.PrecioCompra);
 			dato.push(ingreso.PrecioVenta);
 			dato.push(ingreso.cantidad);
+			dato.push(ingreso.factura);
+			dato.push(ingreso.vencimiento);
 			dato.push();
 		});
 		return dato;
@@ -110,6 +115,8 @@ const ProductosVenta = () => {
 			precioCompra: "",
 			precioVenta: "",
 			cantidad: "",
+			factura: "",
+			vencimiento: "",
 		});
 		setOpen(false);
 	};
@@ -124,6 +131,8 @@ const ProductosVenta = () => {
 			precioCompra: state.precioCompra,
 			precioVenta: state.precioVenta,
 			cantidad: state.cantidad,
+			factura: state.factura,
+			vencimiento: state.vencimiento
 		});
 		navigate(0);
 	};
@@ -143,6 +152,8 @@ const ProductosVenta = () => {
 								<TableCell>Precio Compra</TableCell>
 								<TableCell>Precio Venta</TableCell>
 								<TableCell>Existencias</TableCell>
+								<TableCell>Factura Nro</TableCell>
+								<TableCell>Vencimiento</TableCell>
 								<TableCell>Acciones</TableCell>
 							</TableRow>
 						</TableHead>
@@ -175,6 +186,16 @@ const ProductosVenta = () => {
 									<TableCell>
 										{row.ingresos.map((ingreso) => (
 											<p>{ingreso.cantidad}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.factura}</p>
+										))}
+									</TableCell>
+									<TableCell>
+										{row.ingresos.map((ingreso) => (
+											<p>{ingreso.vencimiento}</p>
 										))}
 									</TableCell>
 									<TableCell>
@@ -284,6 +305,28 @@ const ProductosVenta = () => {
 							fullWidth
 							variant="standard"
 							onChange={(e) => handleChange(e.target.value, "cantidad")}
+						/>
+						<TextField
+							value={state.factura}
+							autoFocus
+							margin="dense"
+							id="factura"
+							label="Factura Nro:"
+							type="text"
+							fullWidth
+							variant="standard"
+							onChange={(e) => handleChange(e.target.value, "factura")}
+						/>
+						<TextField
+							value={state.vencimiento}
+							autoFocus
+							margin="dense"
+							id="vencimiento"
+							label="Vencimiento"
+							type="date"
+							fullWidth
+							variant="standard"
+							onChange={(e) => handleChange(e.target.value, "vencimiento")}
 						/>
 					</DialogContent>
 					<DialogActions>
