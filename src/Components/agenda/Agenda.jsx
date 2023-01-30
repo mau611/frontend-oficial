@@ -104,6 +104,7 @@ const Agenda = () => {
   const [estadoPago, setEstadoPago] = useState("");
   const [detallesPago, setDetallesPago] = useState("");
   const [tipoDePago, setTipoDePago] = useState("");
+  const [selectEventId, setSelectEventId] = useState(0);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -161,7 +162,8 @@ const Agenda = () => {
     setDetalleEvento(detallesEvento);
     setOpen(true);
   };
-  const handleClickOpenDetallePaciente = (pacienteEvento) => {
+  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId) => {
+    setSelectEventId(eventoId);
     getPacienteCita(pacienteEvento);
     setOpenDetallePaciente(true);
   };
@@ -171,6 +173,10 @@ const Agenda = () => {
     setAuxPaciente({});
     setCobroTratamientos([]);
     setCobro(0);
+    setEstadoPago("");
+    setDetallesPago("");
+    setTipoDePago("");
+    setSelectEventId(0);
   };
 
   const getPacienteCita = (paciente) => {
@@ -248,9 +254,11 @@ const Agenda = () => {
         {
           start: new Date(ev.start),
           end: new Date(ev.end),
-          title: ev.title,
+          title: ev.paciente.nombres + " " + ev.paciente.apellidos + ": " + ev.title,
           resourceId: ev.consultorio_id,
           paciente: ev.paciente,
+          evId: ev.id,
+          facturas: ev.facturas
         },
       ]);
     });
@@ -284,26 +292,21 @@ const Agenda = () => {
      * this, the 'click' handler is overridden by the 'doubleClick'
      * action.
      */
-    handleClickOpenDetallePaciente(calEvent.paciente);
+    handleClickOpenDetallePaciente(calEvent.paciente, calEvent.evId);
   }, []);
 
   const realizarCobro = async () => {
     console.log("botohn clickeado")
-    await axios.post(`${endpoint}/servicio`, {
-      fecha:"",
-      numero:"",
-      total:"",
-      estado_pago:"",
-      forma_pago:"",
-      detalles_pago:"",
-      consulta_id:"",
-      nombre:"",
-      cantidad:"",
-      precio:"",
-      subtotal:"",
-      factura_id:"",
+    await axios.post(`${endpoint}/factura`, {
+      total:cobro,
+      estado_pago:estadoPago,
+      forma_pago:tipoDePago,
+      detalles_pago:detallesPago,
+      consulta_id:selectEventId,
+      tratamientos:cobroTratamientos,
     });
-
+    handleCloseDetallePaciente();
+    navigate(0);
   }
 
   const handleGuardar = async () => {
@@ -489,16 +492,18 @@ const Agenda = () => {
                   />
                   <FormControl style={{ width: 200 }}>
                     <InputLabel id="estado-pago">Estado Pago</InputLabel>
-                    <Select labelId="estado-pago" id="estado-pago" label="Age">
-                      <MenuItem value={"pagado"}>No Pagado</MenuItem>
-                      <MenuItem value={"no pagado"}>Pagado</MenuItem>
+                    <Select labelId="estado-pago" id="estado-pago" label="Age" value={estadoPago} onChange={e=>setEstadoPago(e.target.value)}>
+                      <MenuItem value={"pagado"}>Pagado</MenuItem>
+                      <MenuItem value={"no pagado"}>No pagado</MenuItem>
                     </Select>
                   </FormControl>
                   <TextField
+                    value={detallesPago}
                     id="outlined-multiline-static"
                     label="Detalles del pago"
                     multiline
                     rows={3}
+                    onChange={e=>setDetallesPago(e.target.value)}
                     fullWidth
                   />
                   <FormControl fullWidth>
@@ -507,6 +512,8 @@ const Agenda = () => {
                       labelId="forma-pago"
                       id="forma-pago"
                       label="Tipo Pago"
+                      value={tipoDePago}
+                      onChange={e=>setTipoDePago(e.target.value)}
                     >
                       <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
                       <MenuItem value={"Transferencia"}>Trasferencia</MenuItem>
@@ -547,8 +554,7 @@ const Agenda = () => {
               </div>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDetallePaciente}>Cancel</Button>
-              <Button onClick={handleCloseDetallePaciente}>Subscribe</Button>
+              <Button onClick={handleCloseDetallePaciente}>Cancelar</Button>
             </DialogActions>
           </Dialog>
         </div>
