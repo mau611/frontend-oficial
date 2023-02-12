@@ -26,6 +26,8 @@ import AnalyticsIcon from "@mui/icons-material/AnalyticsOutlined";
 import ComputerIcon from "@mui/icons-material/ComputerOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -200,7 +202,7 @@ export default function NavBar({ children, titulo }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Agenda", "Agregar Paciente", "Pacientes", "Clinica", "Stock"].map(
+          {["Agenda", "Agregar Paciente", "Pacientes", "Clinica", "Tienda", "Stock"].map(
             (text, index) => (
               <ListItem
                 key={text}
@@ -232,6 +234,8 @@ export default function NavBar({ children, titulo }) {
                       <Link to="/pacientes"><PersonSearchIcon /></Link>
                     ) : index === 3 ? (
                       <Link to="/"><LocalHospitalIcon /></Link>
+                    ): index === 4 ? (
+                      <Link to="/tienda"><LocalGroceryStoreIcon /></Link>
                     ) : (
                       <Link to="/stock"><InventoryIcon /></Link>
                     )}

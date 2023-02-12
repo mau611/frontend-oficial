@@ -105,6 +105,8 @@ const Agenda = () => {
   const [detallesPago, setDetallesPago] = useState("");
   const [tipoDePago, setTipoDePago] = useState("");
   const [selectEventId, setSelectEventId] = useState(0);
+  const [profesionales, setProfesionales] = useState([]);
+  const [profesionalId, setProfesionalId] = useState('');
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -192,6 +194,7 @@ const Agenda = () => {
     setAuxPaciente({});
     setCobroTratamientos([]);
     setOpen(false);
+    setProfesionalId("");
   };
 
   const handleChangeMultiple = (event) => {
@@ -239,8 +242,14 @@ const Agenda = () => {
     getEstadoCitas();
     getEventosBD();
     getServicios();
+    getProfesionales();
     window.clearTimeout(clickRef?.current);
   }, []);
+
+  const getProfesionales = async () => {
+    const response = await axios.get(`${endpoint}/profesionales`);
+    setProfesionales(response.data);
+  }
 
   const getServicios = async () => {
     const response = await axios.get(`${endpoint}/servicios`);
@@ -254,11 +263,12 @@ const Agenda = () => {
         {
           start: new Date(ev.start),
           end: new Date(ev.end),
-          title: ev.paciente.nombres + " " + ev.paciente.apellidos + ": " + ev.title,
+          title:
+            ev.paciente.nombres + " " + ev.paciente.apellidos + ": " + ev.title,
           resourceId: ev.consultorio_id,
           paciente: ev.paciente,
           evId: ev.id,
-          facturas: ev.facturas
+          facturas: ev.facturas,
         },
       ]);
     });
@@ -296,23 +306,24 @@ const Agenda = () => {
   }, []);
 
   const realizarCobro = async () => {
-    console.log("botohn clickeado")
+    console.log("botohn clickeado");
     await axios.post(`${endpoint}/factura`, {
-      total:cobro,
-      estado_pago:estadoPago,
-      forma_pago:tipoDePago,
-      detalles_pago:detallesPago,
-      consulta_id:selectEventId,
-      tratamientos:cobroTratamientos,
+      total: cobro,
+      estado_pago: estadoPago,
+      forma_pago: tipoDePago,
+      detalles_pago: detallesPago,
+      consulta_id: selectEventId,
+      tratamientos: cobroTratamientos,
     });
     handleCloseDetallePaciente();
     navigate(0);
-  }
+  };
 
   const handleGuardar = async () => {
     const p = "" + paciente;
     const tc = "" + tipoConsulta;
     const ec = "" + estadoCita;
+    const pi = "" + profesionalId;
     await axios.post(`${endpoint}/consulta`, {
       title: detalleTratamiento,
       start: "" + new Date(detalleEvento.start).toISOString(),
@@ -322,6 +333,7 @@ const Agenda = () => {
       paciente_id: p.split(" ")[0],
       tipoConsulta_id: tc.split(" ")[0],
       estadoConsulta_id: ec.split(" ")[0],
+      profesional_id: pi.split(" ")[0],
     });
     handleClose();
     navigate(0);
@@ -443,6 +455,28 @@ const Agenda = () => {
                 />
               )}
             />
+            <br />
+            <Autocomplete
+              required
+              freeSolo
+              id="agendadoPor"
+              value={profesionalId}
+              onChange={(e, value) => setProfesionalId(value)}
+              disableClearable
+              options={profesionales.map(
+                (option) => option.id + " -  " + option.nombre
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Agendado por:"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: "search",
+                  }}
+                />
+              )}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
@@ -492,7 +526,13 @@ const Agenda = () => {
                   />
                   <FormControl style={{ width: 200 }}>
                     <InputLabel id="estado-pago">Estado Pago</InputLabel>
-                    <Select labelId="estado-pago" id="estado-pago" label="Age" value={estadoPago} onChange={e=>setEstadoPago(e.target.value)}>
+                    <Select
+                      labelId="estado-pago"
+                      id="estado-pago"
+                      label="Age"
+                      value={estadoPago}
+                      onChange={(e) => setEstadoPago(e.target.value)}
+                    >
                       <MenuItem value={"pagado"}>Pagado</MenuItem>
                       <MenuItem value={"no pagado"}>No pagado</MenuItem>
                     </Select>
@@ -503,7 +543,7 @@ const Agenda = () => {
                     label="Detalles del pago"
                     multiline
                     rows={3}
-                    onChange={e=>setDetallesPago(e.target.value)}
+                    onChange={(e) => setDetallesPago(e.target.value)}
                     fullWidth
                   />
                   <FormControl fullWidth>
@@ -513,15 +553,20 @@ const Agenda = () => {
                       id="forma-pago"
                       label="Tipo Pago"
                       value={tipoDePago}
-                      onChange={e=>setTipoDePago(e.target.value)}
+                      onChange={(e) => setTipoDePago(e.target.value)}
                     >
                       <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
                       <MenuItem value={"Transferencia"}>Trasferencia</MenuItem>
-                      <MenuItem value={"Tarjeta de Debito"}>Tarjeta de Debito</MenuItem>
+                      <MenuItem value={"Tarjeta de Debito"}>
+                        Tarjeta de Debito
+                      </MenuItem>
                       <MenuItem value={"Bono"}>Bono</MenuItem>
                     </Select>
                   </FormControl>
-                  <IconButton aria-label="add to favorites" onClick={realizarCobro}>
+                  <IconButton
+                    aria-label="add to favorites"
+                    onClick={realizarCobro}
+                  >
                     <PriceCheckIcon />
                     Realizar cobro
                   </IconButton>
