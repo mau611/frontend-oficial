@@ -11,6 +11,7 @@ import ConfigIndex from './Components/configuracion/Index';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Inventario from './Components/stock/Inventario';
 import Tienda from './Components/tienda/Tienda';
+import Cuentas from './Components/cuentas/Cuentas';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='/configuracion' element={<ConfigIndex/>} />
           <Route path='/stock' element={<Inventario/>} />
           <Route path='/tienda' element={<Tienda/>}/>
+          <Route path='/cuentas' element={<Cuentas/>}/>
         </Routes>
       </BrowserRouter>
     </div>
