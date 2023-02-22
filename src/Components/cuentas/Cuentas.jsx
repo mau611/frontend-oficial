@@ -12,10 +12,12 @@ const Cuentas = () => {
         <Grid container spacing={2}>
           <Grid item xs={6} sm={6} md={6}>
             <h3>Cobro pacientes</h3>
+            <br />
             <TablaPacientes/>
           </Grid>
           <Grid item xs={6} sm={6} md={6}>
             <h3>Venta de productos</h3>
+            <br />
             <TablaProductos/>
           </Grid>
         </Grid>

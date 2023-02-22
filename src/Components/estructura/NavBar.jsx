@@ -266,7 +266,7 @@ export default function NavBar({ children, titulo }) {
                     }}
                   >
                     {index === 0 ? (
-                      <Link to="/"><AccountBalanceWalletIcon/></Link>
+                      <Link to="/cuentas"><AccountBalanceWalletIcon/></Link>
                     ) : index === 1 ? (
                       <Link to="/"><AnalyticsIcon /></Link>
                     ) : index === 2 ? (
