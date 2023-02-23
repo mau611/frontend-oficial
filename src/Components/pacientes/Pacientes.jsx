@@ -1,57 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDemoData } from "@mui/x-data-grid-generator";
-import {
-  DataGrid,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector,
-  GridToolbar,
-  esES 
-} from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import NavBar from "../estructura/NavBar";
-import Pagination from "@mui/material/Pagination";
 import { Box } from "@mui/material";
+import axios from "axios";
 
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+const columnas = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "nombres", headerName: "Nombres", width: 200 },
+  { field: "apellidos", headerName: "Apellidos", width: 200 },
+  { field: "telefono", headerName: "Telefono", width: 130 },
+  { field: "fecha_nacimiento", headerName: "Fecha de nacimiento", width: 130 },
+  { field: "ci", headerName: "Carnet", width: 130 },
+  { field: "sexo", headerName: "Sexo", width: 130 },
+  { field: "direccion", headerName: "Direccion", width: 300 },
+];
+const endpoint = "http://localhost:8000/api";
 
-  return (
-    <Pagination
-      color="primary"
-      count={pageCount}
-      page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
 
 export const Pacientes = () => {
-  const { data } = useDemoData({
-    dataSet: "Commodity",
-    rowLength: 100,
-    maxColumns: 6,
-  });
+  const [pacientes, setPacientes] = useState([]);
+  useEffect(() => {
+    getPacientes();
+  }, [])
 
+  const getPacientes = async () => {
+    const response = await axios.get(`${endpoint}/pacientes`);
+    setPacientes(response.data);
+  };
+  
+  
   return (
     <NavBar>
-        <h1>Lista de Pacientes</h1>
-        <br />
-      <Box sx={{ height: 700, width: "100%" }}>
+      <h1>Lista de Pacientes</h1>
+      <br />
+      <div style={{ height: 700, width: "100%" }}>
         <DataGrid
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-          pagination
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          components={{
-            Pagination: CustomPagination,
-            Toolbar: GridToolbar,
-          }}
-          {...data}
+          rows={pacientes}
+          columns={columnas}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
         />
-      </Box>
+      </div>
     </NavBar>
   );
 };
