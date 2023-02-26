@@ -12,6 +12,7 @@ import {
 import NavBar from "../estructura/NavBar";
 import Pagination from "@mui/material/Pagination";
 import { Box } from "@mui/material";
+import FormularioHistoria from "./historias/FormularioHistoria";
 
 function CustomPagination() {
   const apiRef = useGridApiContext();
@@ -39,19 +40,7 @@ export const Clinica = () => {
     <NavBar>
         <h1>Historias Clinicas</h1>
         <br />
-      <Box sx={{ height: 700, width: "100%" }}>
-        <DataGrid
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-          pagination
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          components={{
-            Pagination: CustomPagination,
-            Toolbar: GridToolbar,
-          }}
-          {...data}
-        />
-      </Box>
+        <FormularioHistoria/>
     </NavBar>
   );
 };

@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import NavBar from "../estructura/NavBar";
 import { Box } from "@mui/material";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const columnas = [
   { field: "id", headerName: "ID", width: 70 },
@@ -17,31 +18,46 @@ const columnas = [
 ];
 const endpoint = "http://localhost:8000/api";
 
-
 export const Pacientes = () => {
   const [pacientes, setPacientes] = useState([]);
   useEffect(() => {
     getPacientes();
-  }, [])
+  }, []);
 
   const getPacientes = async () => {
     const response = await axios.get(`${endpoint}/pacientes`);
     setPacientes(response.data);
   };
-  
-  
+
   return (
     <NavBar>
       <h1>Lista de Pacientes</h1>
       <br />
-      <div style={{ height: 700, width: "100%" }}>
-        <DataGrid
-          rows={pacientes}
-          columns={columnas}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          checkboxSelection
-        />
+      <div style={{ width: "100%" }}>
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Historia</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Carnet de identidad</th>
+              <th scope="col">Sexo</th>
+              <th scope="col">Direccion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pacientes.map((paciente)=>
+              <tr>
+                <th scope="row">{paciente.id}</th>
+                <td><Link to={`/paciente/${paciente.id}`}>{paciente.nombres} {paciente.apellidos}</Link></td>
+                <td>{paciente.telefono}</td>
+                <td>{paciente.ci}</td>
+                <td>{paciente.sexo}</td>
+                <td>{paciente.direccion}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </NavBar>
   );

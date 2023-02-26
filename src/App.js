@@ -12,6 +12,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Inventario from './Components/stock/Inventario';
 import Tienda from './Components/tienda/Tienda';
 import Cuentas from './Components/cuentas/Cuentas';
+import Paciente from './Components/pacientes/paciente/Paciente';
+import Estadisticas from './Components/estadisticas/Estadisticas';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           <Route path='/stock' element={<Inventario/>} />
           <Route path='/tienda' element={<Tienda/>}/>
           <Route path='/cuentas' element={<Cuentas/>}/>
+          <Route path='/paciente/:id' element={<Paciente/>}/>
+          <Route path='/estadisticas' element={<Estadisticas/>}/>
         </Routes>
       </BrowserRouter>
     </div>

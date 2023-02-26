@@ -2,15 +2,13 @@ import React from "react";
 import "./css/inicio.css";
 import { Link } from "react-router-dom";
 import logo from "./../../shanti_transparencia.png";
-import { Avatar, Grid } from "@mui/material";
-import { width } from "@mui/system";
 
 const inicio = () => {
 	return (
 		<div className="jumbotron text-center">
 			<div className="container">
         <div class="text-center">
-          <img src={logo} className="rounded" width={300} style={{backgroundColor:"white"}}/>
+          <img src={logo} className="rounded" width={300} style={{backgroundColor:"white"}} alt="logo"/>
         </div>
         <br />
 				<h1>Sistema - Shanti Spa</h1>

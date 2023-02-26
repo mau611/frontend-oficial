@@ -73,11 +73,11 @@ const Index = () => {
             aria-label="full width tabs example"
             style={{backgroundColor:"#155E30"}}
           >
-            <Tab label="Gabinetes" {...a11yProps(0)} />
-            <Tab label="Tipos de Consulta" {...a11yProps(1)} />
-            <Tab label="Estado Citas" {...a11yProps(2)} />
-            <Tab label="Licenciados de turno" {...a11yProps(3)} />
-            <Tab label="Servicios" {...a11yProps(4)} />
+            <Tab label="Gabinetes" id="gabinetes" {...a11yProps(0)} href="#gabinetes"/>
+            <Tab label="Tipos de Consulta" id="tipos_de_consulta" {...a11yProps(1)} href="#tipos_de_consulta"/>
+            <Tab label="Estado Citas" id="estados_citas" {...a11yProps(2)} href="#estados_citas"/>
+            <Tab label="Licenciados de turno" id="lic_de_turno" {...a11yProps(3)} href="#lic_de_turno"/>
+            <Tab label="Servicios" {...a11yProps(4)} id="servicios" href="#servicios"/>
           </Tabs>
         </AppBar>
         <div>
