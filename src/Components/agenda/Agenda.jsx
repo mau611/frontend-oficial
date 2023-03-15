@@ -3,7 +3,11 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Accordion from "react-bootstrap/Accordion";
-import ButtonB from 'react-bootstrap/Button';
+import ButtonB from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 import React, {
   Fragment,
   useCallback,
@@ -103,6 +107,7 @@ const Agenda = () => {
   const dataFetchedRef = useRef(false);
   const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
   const [auxPaciente, setAuxPaciente] = useState({});
+  const [auxEstado, setAuxEstado] = useState({});
   const [cobroTratamientos, setCobroTratamientos] = useState([]);
   const [servicios, setServicios] = useState([]);
   const [cobro, setCobro] = useState(0);
@@ -165,14 +170,27 @@ const Agenda = () => {
   const navigate = useNavigate();
   const clickRef = useRef(null);
 
+  const borrarCita = async () =>{
+    await axios.delete(`${endpoint}/consulta/${selectEventId}`);
+    navigate(0);
+  }
+
   const handleClickOpen = (detallesEvento) => {
     setDetalleEvento(detallesEvento);
     setOpen(true);
   };
-  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId) => {
+  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId, estado) => {
     setSelectEventId(eventoId);
     getPacienteCita(pacienteEvento);
     setOpenDetallePaciente(true);
+    setAuxEstado(estado);
+  };
+
+  const cambiarEstadoCita = async (estadoId) => {
+    await axios.put(`${endpoint}/consulta/${selectEventId}/${estadoId}`, {
+      eId: estadoId,
+    });
+    navigate(0);
   };
 
   const handleCloseDetallePaciente = () => {
@@ -268,12 +286,12 @@ const Agenda = () => {
         {
           start: new Date(ev.start),
           end: new Date(ev.end),
-          title:
-            ev.paciente.nombres + " " + ev.paciente.apellidos,
+          title: ev.paciente.nombres + " " + ev.paciente.apellidos,
           resourceId: ev.consultorio_id,
           paciente: ev.paciente,
           evId: ev.id,
           facturas: ev.facturas,
+          estado: ev.estado_cita,
         },
       ]);
     });
@@ -283,11 +301,6 @@ const Agenda = () => {
   const handleSelectSlot = useCallback(({ start, end, title, resourceId }) => {
     handleClickOpen({ start, end, resourceId });
   });
-
-  const handleSelectEvent = useCallback(
-    (event) => window.alert(event.title),
-    []
-  );
 
   const { defaultDate, scrollToTime, messages } = useMemo(
     () => ({
@@ -307,7 +320,11 @@ const Agenda = () => {
      * this, the 'click' handler is overridden by the 'doubleClick'
      * action.
      */
-    handleClickOpenDetallePaciente(calEvent.paciente, calEvent.evId);
+    handleClickOpenDetallePaciente(
+      calEvent.paciente,
+      calEvent.evId,
+      calEvent.estado
+    );
   }, []);
 
   const realizarCobro = async () => {
@@ -388,6 +405,7 @@ const Agenda = () => {
           selectable
           popup
           resourceIdAccessor="id"
+          timeslots={1}
         />
         <Dialog
           fullScreen={fullScreen}
@@ -516,15 +534,44 @@ const Agenda = () => {
             onClose={handleCloseDetallePaciente}
           >
             <DialogTitle>
-              {auxPaciente.nombres} {auxPaciente.apellidos}
+              <Container>
+                <Row>
+                  <Col xs={9}>
+                    {auxPaciente.nombres} {auxPaciente.apellidos}
+                  </Col>
+                  <Col xs={3}>
+                    <ButtonB variant="danger" style={{ width: "100px", fontSize:12 }} onClick={()=>borrarCita()}>
+                      Eliminar Cita
+                    </ButtonB>
+                  </Col>
+                </Row>
+              </Container>
+
+              <hr />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Estado cita:
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="estado"
+                  value={auxEstado.id}
+                  onChange={(e) => cambiarEstadoCita(e.target.value)}
+                >
+                  {estadoCitas.map((option) => (
+                    <MenuItem value={option.id}>{option.estado}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </DialogTitle>
             <DialogContent>
               <Accordion style={{ width: "500px" }}>
                 <Accordion.Item eventKey="0">
-                  <Accordion.Header>Detalles de la Cita</Accordion.Header>
+                  <Accordion.Header>Cobros</Accordion.Header>
                   <Accordion.Body>
-                    Eliminar cita <br />
-                    Modificar estado cita <br />
+                    Factura 1 <br />
+                    Factura 2 <br />
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">
