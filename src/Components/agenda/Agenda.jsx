@@ -269,7 +269,7 @@ const Agenda = () => {
           start: new Date(ev.start),
           end: new Date(ev.end),
           title:
-            ev.paciente.nombres + " " + ev.paciente.apellidos + ": " + ev.title,
+            ev.paciente.nombres + " " + ev.paciente.apellidos,
           resourceId: ev.consultorio_id,
           paciente: ev.paciente,
           evId: ev.id,
