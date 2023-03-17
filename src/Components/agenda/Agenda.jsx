@@ -123,11 +123,6 @@ const Agenda = () => {
 
   const eventPropGetter = useCallback(
     (event, start, end, isSelected) => ({
-      ...(isSelected && {
-        style: {
-          backgroundColor: "#63A355",
-        },
-      }),
       ...(event.resourceId === 1 && {
         style: {
           backgroundColor: "#017745",
@@ -161,6 +156,11 @@ const Agenda = () => {
       ...(event.resourceId === 7 && {
         style: {
           backgroundColor: "#8A2C47",
+        },
+      }),
+      ...(event.estado.estado === "Finalizada" && {
+        style: {
+          background: "linear-gradient(#e66465, #9198e5)",
         },
       }),
     }),
@@ -312,7 +312,7 @@ const Agenda = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
-    console.log(calEvent);
+    console.log(calEvent.estado.estado);
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
