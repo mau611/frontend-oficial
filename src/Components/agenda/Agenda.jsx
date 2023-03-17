@@ -146,7 +146,7 @@ const Agenda = () => {
       }),
       ...(event.estado.estado === "No asistencia" && {
         style: {
-          background: "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 2%)",
+          background: "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 10%)",
         },
       }),
       ...(event.estado.estado === "Reprogramada" && {
@@ -373,6 +373,7 @@ const Agenda = () => {
       <hr />
       <Fragment>
         <DragAndDropCalendar
+          dayLayoutAlgorithm={"no-overlap"}
           views={["day", "month", "agenda"]}
           min={new Date(1972, 0, 1, 6, 0, 0, 0)}
           max={new Date(0, 0, 1, 20, 30, 0, 0)}
