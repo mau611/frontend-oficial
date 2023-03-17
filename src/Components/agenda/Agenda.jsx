@@ -123,44 +123,35 @@ const Agenda = () => {
 
   const eventPropGetter = useCallback(
     (event, start, end, isSelected) => ({
-      ...(event.resourceId === 1 && {
+      ...(event.estado.estado === "Por llegar" && {
         style: {
-          backgroundColor: "#017745",
+          backgroundColor: "#8fbc91",
         },
       }),
-      ...(event.resourceId === 2 && {
+      ...(event.estado.estado === "En espera" && {
         style: {
-          backgroundColor: "#00A77B",
+          backgroundColor: "#f1ec7a",
+          color: "#2a2a2a"
         },
       }),
-      ...(event.resourceId === 3 && {
+      ...(event.estado.estado === "En consulta" && {
         style: {
-          backgroundColor: "#A6D47C",
-        },
-      }),
-      ...(event.resourceId === 4 && {
-        style: {
-          backgroundColor: "#AE64C7",
-        },
-      }),
-      ...(event.resourceId === 5 && {
-        style: {
-          backgroundColor: "#9bd3ae",
-        },
-      }),
-      ...(event.resourceId === 6 && {
-        style: {
-          backgroundColor: "#FF807A",
-        },
-      }),
-      ...(event.resourceId === 7 && {
-        style: {
-          backgroundColor: "#8A2C47",
+          backgroundColor: "#f6a7b8",
         },
       }),
       ...(event.estado.estado === "Finalizada" && {
         style: {
-          background: "linear-gradient(#e66465, #9198e5)",
+          backgroundColor: "#1d4d9f",
+        },
+      }),
+      ...(event.estado.estado === "No asistencia" && {
+        style: {
+          background: "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 2%)",
+        },
+      }),
+      ...(event.estado.estado === "Reprogramada" && {
+        style: {
+          backgroundColor: "#f08838",
         },
       }),
     }),
@@ -312,7 +303,7 @@ const Agenda = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
-    console.log(calEvent.estado.estado);
+    console.log(calEvent);
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
