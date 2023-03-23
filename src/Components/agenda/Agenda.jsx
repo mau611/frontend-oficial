@@ -107,6 +107,7 @@ const Agenda = () => {
   const dataFetchedRef = useRef(false);
   const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
   const [auxPaciente, setAuxPaciente] = useState({});
+  const [auxFacturas, setAuxFacturas] = useState({});
   const [auxEstado, setAuxEstado] = useState({});
   const [cobroTratamientos, setCobroTratamientos] = useState([]);
   const [servicios, setServicios] = useState([]);
@@ -126,6 +127,10 @@ const Agenda = () => {
       ...(event.estado.estado === "Por llegar" && {
         style: {
           backgroundColor: "#8fbc91",
+          backgroundImage: "radial-gradient(#fff 20%, transparent 20%), radial-gradient(#fff 20%, transparent 20%)",
+          backgroundPosition : "0 0 , 50px 50px",
+          backgroundSize: "10px 10px",
+          color: "black"
         },
       }),
       ...(event.estado.estado === "En espera" && {
@@ -137,6 +142,7 @@ const Agenda = () => {
       ...(event.estado.estado === "En consulta" && {
         style: {
           backgroundColor: "#f6a7b8",
+          color: "#2a2a2a"
         },
       }),
       ...(event.estado.estado === "Finalizada" && {
@@ -147,11 +153,13 @@ const Agenda = () => {
       ...(event.estado.estado === "No asistencia" && {
         style: {
           background: "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 10%)",
+          color: "#2a2a2a"
         },
       }),
       ...(event.estado.estado === "Reprogramada" && {
         style: {
           backgroundColor: "#f08838",
+          color: "#2a2a2a"
         },
       }),
     }),
@@ -170,11 +178,12 @@ const Agenda = () => {
     setDetalleEvento(detallesEvento);
     setOpen(true);
   };
-  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId, estado) => {
+  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId, estado, facturas) => {
     setSelectEventId(eventoId);
     getPacienteCita(pacienteEvento);
     setOpenDetallePaciente(true);
     setAuxEstado(estado);
+    setAuxFacturas(facturas);
   };
 
   const cambiarEstadoCita = async (estadoId) => {
@@ -193,6 +202,7 @@ const Agenda = () => {
     setDetallesPago("");
     setTipoDePago("");
     setSelectEventId(0);
+    setAuxFacturas({});
   };
 
   const getPacienteCita = (paciente) => {
@@ -314,7 +324,8 @@ const Agenda = () => {
     handleClickOpenDetallePaciente(
       calEvent.paciente,
       calEvent.evId,
-      calEvent.estado
+      calEvent.estado,
+      calEvent.facturas,
     );
   }, []);
 
@@ -562,8 +573,7 @@ const Agenda = () => {
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>Cobros</Accordion.Header>
                   <Accordion.Body>
-                    Factura 1 <br />
-                    Factura 2 <br />
+                    {auxFacturas}
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">
