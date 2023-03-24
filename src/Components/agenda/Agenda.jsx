@@ -7,6 +7,7 @@ import ButtonB from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Table from "react-bootstrap/Table";
 
 import React, {
   Fragment,
@@ -107,7 +108,7 @@ const Agenda = () => {
   const dataFetchedRef = useRef(false);
   const [openDetallePaciente, setOpenDetallePaciente] = useState(false);
   const [auxPaciente, setAuxPaciente] = useState({});
-  const [auxFacturas, setAuxFacturas] = useState({});
+  const [auxFacturas, setAuxFacturas] = useState([]);
   const [auxEstado, setAuxEstado] = useState({});
   const [cobroTratamientos, setCobroTratamientos] = useState([]);
   const [servicios, setServicios] = useState([]);
@@ -119,6 +120,43 @@ const Agenda = () => {
   const [profesionales, setProfesionales] = useState([]);
   const [profesionalId, setProfesionalId] = useState("");
 
+  //variables de bonos
+  const [nombreBono, setNombreBono] = useState("");
+  const [sesionesBono, setSesionesBono] = useState(0);
+  const [costoBono, setCostoBono] = useState(0);
+  const setValoresBono = (value, variable) => {
+    if (variable == "nombreBono") {
+      setNombreBono(value);
+    } else if (variable == "sesionesBono") {
+      setSesionesBono(value);
+    } else if (variable == "costoBono") {
+      setCostoBono(value);
+    }
+  };
+
+  const crearBono = async () => {
+    console.log("botohn clickeado Bonos");
+    await axios.post(`${endpoint}/bono`, {
+      nombre: nombreBono,
+      sesiones: sesionesBono,
+      precio: costoBono,
+      restantes: sesionesBono,
+      paciente_id: auxPaciente.id,
+    });
+    handleCloseDetallePaciente();
+    navigate(0);
+  };
+
+  const consumirBono = async (bonoId) => {
+    await axios.put(`${endpoint}/descontarBono/${bonoId}`, {
+      bono_id: bonoId,
+      consulta_id: selectEventId,
+    });
+    handleCloseDetallePaciente();
+    navigate(0);
+  };
+  //fin bono
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -127,22 +165,23 @@ const Agenda = () => {
       ...(event.estado.estado === "Por llegar" && {
         style: {
           backgroundColor: "#8fbc91",
-          backgroundImage: "radial-gradient(#fff 20%, transparent 20%), radial-gradient(#fff 20%, transparent 20%)",
-          backgroundPosition : "0 0 , 50px 50px",
+          backgroundImage:
+            "radial-gradient(#fff 20%, transparent 20%), radial-gradient(#fff 20%, transparent 20%)",
+          backgroundPosition: "0 0 , 50px 50px",
           backgroundSize: "10px 10px",
-          color: "black"
+          color: "black",
         },
       }),
       ...(event.estado.estado === "En espera" && {
         style: {
           backgroundColor: "#f1ec7a",
-          color: "#2a2a2a"
+          color: "#2a2a2a",
         },
       }),
       ...(event.estado.estado === "En consulta" && {
         style: {
           backgroundColor: "#f6a7b8",
-          color: "#2a2a2a"
+          color: "#2a2a2a",
         },
       }),
       ...(event.estado.estado === "Finalizada" && {
@@ -152,14 +191,15 @@ const Agenda = () => {
       }),
       ...(event.estado.estado === "No asistencia" && {
         style: {
-          background: "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 10%)",
-          color: "#2a2a2a"
+          background:
+            "repeating-linear-gradient(45deg,#6991c7,#a3bded 1%,#6991c7 10%)",
+          color: "#2a2a2a",
         },
       }),
       ...(event.estado.estado === "Reprogramada" && {
         style: {
           backgroundColor: "#f08838",
-          color: "#2a2a2a"
+          color: "#2a2a2a",
         },
       }),
     }),
@@ -169,16 +209,21 @@ const Agenda = () => {
   const navigate = useNavigate();
   const clickRef = useRef(null);
 
-  const borrarCita = async () =>{
+  const borrarCita = async () => {
     await axios.delete(`${endpoint}/consulta/${selectEventId}`);
     navigate(0);
-  }
+  };
 
   const handleClickOpen = (detallesEvento) => {
     setDetalleEvento(detallesEvento);
     setOpen(true);
   };
-  const handleClickOpenDetallePaciente = (pacienteEvento, eventoId, estado, facturas) => {
+  const handleClickOpenDetallePaciente = (
+    pacienteEvento,
+    eventoId,
+    estado,
+    facturas
+  ) => {
     setSelectEventId(eventoId);
     getPacienteCita(pacienteEvento);
     setOpenDetallePaciente(true);
@@ -202,7 +247,6 @@ const Agenda = () => {
     setDetallesPago("");
     setTipoDePago("");
     setSelectEventId(0);
-    setAuxFacturas({});
   };
 
   const getPacienteCita = (paciente) => {
@@ -219,6 +263,7 @@ const Agenda = () => {
     setCobroTratamientos([]);
     setOpen(false);
     setProfesionalId("");
+    setAuxFacturas({});
   };
 
   const handleChangeMultiple = (event) => {
@@ -299,9 +344,11 @@ const Agenda = () => {
   };
 
   const localizer = momentLocalizer(moment);
-  const handleSelectSlot = useCallback(({ start, end, title, resourceId }) => {
-    handleClickOpen({ start, end, resourceId });
-  });
+  const handleSelectSlot = useCallback(
+    ({ start, end, title, resourceId, facturas }) => {
+      handleClickOpen({ start, end, resourceId, facturas });
+    }
+  );
 
   const { defaultDate, scrollToTime, messages } = useMemo(
     () => ({
@@ -325,7 +372,7 @@ const Agenda = () => {
       calEvent.paciente,
       calEvent.evId,
       calEvent.estado,
-      calEvent.facturas,
+      calEvent.facturas
     );
   }, []);
 
@@ -543,7 +590,11 @@ const Agenda = () => {
                     {auxPaciente.nombres} {auxPaciente.apellidos}
                   </Col>
                   <Col xs={3}>
-                    <ButtonB variant="danger" style={{ width: "100px", fontSize:12 }} onClick={()=>borrarCita()}>
+                    <ButtonB
+                      variant="danger"
+                      style={{ width: "100px", fontSize: 12 }}
+                      onClick={() => borrarCita()}
+                    >
                       Eliminar Cita
                     </ButtonB>
                   </Col>
@@ -573,7 +624,26 @@ const Agenda = () => {
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>Cobros</Accordion.Header>
                   <Accordion.Body>
-                    {auxFacturas}
+                    <Table striped bordered hover size="sm">
+                      <thead>
+                        <tr>
+                          <th>Factura No</th>
+                          <th>Total</th>
+                          <th>Estado pago</th>
+                          <th>Detalles</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {auxFacturas.map((factura) => (
+                          <tr>
+                            <td>{factura.numero}</td>
+                            <td>{factura.total} Bs</td>
+                            <td>{factura.estado_pago}</td>
+                            <td>{factura.detalles_pago}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">
@@ -644,7 +714,7 @@ const Agenda = () => {
                           >
                             <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
                             <MenuItem value={"Transferencia"}>
-                              Trasferencia
+                              Transferencia
                             </MenuItem>
                             <MenuItem value={"Tarjeta de Debito"}>
                               Tarjeta de Debito
@@ -668,27 +738,81 @@ const Agenda = () => {
                   <Accordion.Body>
                     <br />
                     <div>
+                      {auxPaciente.bonos == undefined ? (
+                        "nada"
+                      ) : (
+                        <Container>
+                          Sesiones paciente:
+                          {auxPaciente.bonos.map((bono) => (
+                            <Row>
+                              <Col>
+                                {bono.nombre} x{bono.sesiones}
+                              </Col>
+                              <Col>Restantes: {bono.restantes}</Col>
+                              {bono.restantes > 0 ? (
+                                <Col>
+                                  <ButtonB
+                                    style={{ width: "70%" }}
+                                    size="sm"
+                                    variant="link"
+                                    onClick={() => consumirBono(bono.id)}
+                                  >
+                                    Consumir
+                                  </ButtonB>
+                                </Col>
+                              ) : (
+                                <Col>
+                                  <ButtonB
+                                    style={{ width: "100%" }}
+                                    size="sm"
+                                    variant="outline-secondary"
+                                    disabled
+                                  >
+                                    Bono consumido
+                                  </ButtonB>
+                                </Col>
+                              )}
+                              <hr />
+                            </Row>
+                          ))}
+                        </Container>
+                      )}
+                      <br />
+                    </div>
+                    <div>
                       <TextField
                         id="outlined-basic"
-                        label="Crear Bono"
+                        label="Nombre"
                         variant="outlined"
-                        style={{ width: 145 }}
+                        style={{ width: 200 }}
+                        value={nombreBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "nombreBono")
+                        }
                       />
                       <TextField
                         id="outlined-basic"
                         label="Sesiones"
                         type={"number"}
                         variant="outlined"
-                        style={{ width: 80 }}
+                        style={{ width: 110 }}
+                        value={sesionesBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "sesionesBono")
+                        }
                       />
                       <TextField
                         id="outlined-basic"
                         label="Monto"
                         variant="outlined"
-                        style={{ width: 80 }}
+                        style={{ width: 100 }}
+                        value={costoBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "costoBono")
+                        }
                       />
                       <IconButton aria-label="add to favorites">
-                        <PriceCheckIcon />
+                        <PriceCheckIcon onClick={crearBono} />
                       </IconButton>
                     </div>
                   </Accordion.Body>
