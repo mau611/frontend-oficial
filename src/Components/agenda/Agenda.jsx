@@ -259,11 +259,11 @@ const Agenda = () => {
     setEstadoCita("");
     setDetalleTratamiento("");
     setDetalleEvento("");
-    setAuxPaciente({});
+    setAuxPaciente([]);
     setCobroTratamientos([]);
     setOpen(false);
     setProfesionalId("");
-    setAuxFacturas({});
+    setAuxFacturas([]);
   };
 
   const handleChangeMultiple = (event) => {
