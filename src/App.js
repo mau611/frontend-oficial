@@ -17,7 +17,7 @@ import Estadisticas from './Components/estadisticas/Estadisticas';
 
 function App() {
   return (
-    <div className="App" style={{backgroundImage: `url("https://images.wallpaperscraft.com/image/single/wooden_solid_dark_9665_2048x1152.jpg")`, backgroundRepeat: 'no-repeat', backgroundSize: "cover" }} >
+    <div className="App"  >
       <BrowserRouter>
         <Routes>
         <Route path='/' element={<Inicio/>} />

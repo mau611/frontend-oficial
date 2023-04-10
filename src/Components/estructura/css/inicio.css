@@ -8,6 +8,8 @@ body {
     margin: 0;
     height: 100vh;
     color: #155E30;
+    background-color: #371d10;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png");
   }
 
   .btn{
