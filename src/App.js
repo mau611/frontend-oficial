@@ -17,7 +17,7 @@ import Estadisticas from './Components/estadisticas/Estadisticas';
 
 function App() {
   return (
-    <div className="App"  >
+    <div className="App">
       <BrowserRouter>
         <Routes>
         <Route path='/' element={<Inicio/>} />
