@@ -16,7 +16,7 @@ const Columnas = [
   { field: "color", headerName: "Color", width: 130 },
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://shantispawellnesslife.com/api";
 
 const CrearGabinetes = () => {
   const [state, setState] = useState({

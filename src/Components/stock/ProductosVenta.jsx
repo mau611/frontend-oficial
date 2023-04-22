@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://shantispawellnesslife.com/api";
 
 const ProductosVenta = () => {
   const [state, setState] = useState({
