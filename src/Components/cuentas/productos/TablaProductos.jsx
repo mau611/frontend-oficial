@@ -13,7 +13,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const endpoint = "https://shantispawellnesslife.com/api";
+const endpoint = "www.shantispawellnesslife.com/api";
 
 const TablaProductos = () => {
   const [ventas, setVentas] = useState([]);

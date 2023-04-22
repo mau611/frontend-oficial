@@ -28,7 +28,7 @@ const Columnas = [
   { field: "accion", headerName: "accion", width: 200 },
 ];
 
-const endpoint = "https://shantispawellnesslife.com/api";
+const endpoint = "www.shantispawellnesslife.com/api";
 
 const Proveedores = () => {
   const [state, setState] = useState({
