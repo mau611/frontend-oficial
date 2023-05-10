@@ -40,7 +40,7 @@ import {
 } from "@mui/material";
 
 const drawerWidth = 240;
-const endpoint = "www.shantispawellnesslife.com/api/paciente";
+const endpoint = "https://shantispawellnesslife.com/api/paciente";
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
