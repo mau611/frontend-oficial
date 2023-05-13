@@ -15,7 +15,7 @@ const Columnas = [
   { field: "nombre", headerName: "Consultorio", width: 130 },
 ];
 
-const endpoint = "https://shantispawellnesslife.com/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const Licenciados = () => {
   const [state, setState] = useState({

@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const endpoint = "https://shantispawellnesslife.com/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const TablaPacientes = () => {
   const [facturas, setFacturas] = useState([]);
