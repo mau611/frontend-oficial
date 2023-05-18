@@ -38,6 +38,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import logoNav from "./../../navbar.png";
 
 const drawerWidth = 240;
 const endpoint = "http://localhost:8000/api/paciente";
@@ -188,6 +189,9 @@ export default function NavBar({ children, titulo }) {
           <Typography variant="h6" noWrap component="div">
             {titulo}
           </Typography>
+          <Link to="/" rel="noreferrer">
+            <img src={logoNav} className="rounded" width={100} alt="logo" />
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
