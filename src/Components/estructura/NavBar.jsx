@@ -39,6 +39,7 @@ import {
   TextField,
 } from "@mui/material";
 import logoNav from "./../../navbar.png";
+import Alerta from "./Alerta";
 
 const drawerWidth = 240;
 const endpoint = "https://stilettoapi.com/api/paciente";
@@ -112,6 +113,7 @@ export default function NavBar({ children, titulo }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const [alerta, setAlerta] = React.useState(false);
 
   const [state, setState] = React.useState({
     nombres: "",
@@ -142,6 +144,7 @@ export default function NavBar({ children, titulo }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setAlerta(true);
     await axios.post(endpoint, {
       nombres: state.nombres,
       apellidos: state.apellidos,
@@ -150,7 +153,7 @@ export default function NavBar({ children, titulo }) {
       ci: state.ci,
       sexo: state.sexo,
       direccion: state.direccion,
-      fecha_registro: "1996/05/4",
+      fecha_registro: "1996/05/4"
     });
     navigate(0);
   };
@@ -293,6 +296,7 @@ export default function NavBar({ children, titulo }) {
         <Dialog open={openModal} onClose={handleCloseModal}>
           <form onSubmit={handleSubmit} method="post">
             <DialogTitle>Registro de paciente</DialogTitle>
+            <Alerta mostrar={alerta} titulo={"Error en los datos"} contenido={"revise "}/>
             <DialogContent>
               <TextField
                 autoFocus
