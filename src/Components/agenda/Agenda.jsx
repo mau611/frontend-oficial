@@ -102,7 +102,7 @@ const Agenda = () => {
   const [estadoCitas, setEstadoCitas] = useState([]);
   const [paciente, setPaciente] = useState(null);
   const [tipoConsulta, setTipoConsulta] = useState(null);
-  const [estadoCita, setEstadoCita] = useState(null);
+  const [estadoCita, setEstadoCita] = useState("1 -  Por llegar");
   const [detalleTratamiento, setDetalleTratamiento] = useState("");
   const [detalleEvento, setDetalleEvento] = useState("");
   const dataFetchedRef = useRef(false);
@@ -165,11 +165,6 @@ const Agenda = () => {
       ...(event.estado.estado === "Por llegar" && {
         style: {
           backgroundColor: "#8fbc91",
-          backgroundImage:
-            "radial-gradient(#fff 20%, transparent 20%), radial-gradient(#fff 20%, transparent 20%)",
-          backgroundPosition: "0 0 , 50px 50px",
-          backgroundSize: "10px 10px",
-          color: "black",
         },
       }),
       ...(event.estado.estado === "En espera" && {
@@ -465,7 +460,7 @@ const Agenda = () => {
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle>{"Agendar cita a Paciente"}</DialogTitle>
+          <DialogTitle style={{backgroundColor:"#155E30", color:"white"}}>{"Agendar cita"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
               En esta ventana de dialogo podr&aacute;s agendar una cita

@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import React from 'react'
 import { fetchData } from '../../../js/FetchData'
 
-const apiData = fetchData("https://stilettoapi.com/api/consultas")
+const apiData = fetchData("https://stilettoapi.com/api/pacientes")
 
 const FormularioHistoria = () => {
   const data = apiData.leer();
@@ -14,7 +14,7 @@ const FormularioHistoria = () => {
       <Suspense fallback={<div>Cargando...</div>}>
         <ul className='card'>
           {data?.map((paciente)=>(
-            <li key={paciente.id}>{paciente.title}</li>
+            <li key={paciente.id}>{paciente.nombres}</li>
           ))}
         </ul>
       </Suspense>

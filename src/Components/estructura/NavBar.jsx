@@ -292,7 +292,7 @@ export default function NavBar({ children, titulo }) {
         <DrawerHeader />
         <Dialog open={openModal} onClose={handleCloseModal}>
           <form onSubmit={handleSubmit} method="post">
-            <DialogTitle>Registro de paciente</DialogTitle>
+            <DialogTitle style={{backgroundColor:"#155E30", color:"white"}}>Registro de paciente</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -331,6 +331,7 @@ export default function NavBar({ children, titulo }) {
                 onChange={(e) => handleChange(e.target.value, "telefono")}
               />
               <TextField
+                label="fecha de nacimiento"
                 autoFocus
                 margin="dense"
                 id="fecha_nacimiento"
@@ -340,6 +341,7 @@ export default function NavBar({ children, titulo }) {
                 fullWidth
                 required
                 variant="standard"
+                InputLabelProps={{ shrink: true }}  
                 onChange={(e) =>
                   handleChange(e.target.value, "fecha_nacimiento")
                 }
