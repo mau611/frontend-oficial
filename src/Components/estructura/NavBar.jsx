@@ -26,9 +26,10 @@ import AnalyticsIcon from "@mui/icons-material/AnalyticsOutlined";
 import ComputerIcon from "@mui/icons-material/ComputerOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { Link, useNavigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 import {
   Button,
   Dialog,
@@ -206,93 +207,141 @@ export default function NavBar({ children, titulo }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Agenda", "Agregar Paciente", "Pacientes", "Clinica", "Tienda", "Stock"].map(
-            (text, index) => (
-              <ListItem
-                key={text}
-                disablePadding
-                sx={{ display: "block" }}
-                onClick={(e) => handleOnClick(e, text)}
+          {[
+            <Link to="/agenda">Agenda</Link>,
+            "Agregar Paciente",
+            <Link to="/pacientes">Pacientes</Link>,
+            <Link to="/clinica">Clinica</Link>,
+            <Link to="/tienda">Tienda</Link>,
+            <Link to="/stock">Stock</Link>,
+          ].map((text, index) => (
+            <ListItem
+              key={text}
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={(e) => handleOnClick(e, text)}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
               >
-                <ListItemButton
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {index === 0 ? (
+                  {index === 0 ? (
+                    <Tooltip title="Agenda" placement="right">
                       <Link to="/agenda">
                         <TodayIcon />
                       </Link>
-                    ) : index === 1 ? (
+                    </Tooltip>
+                  ) : index === 1 ? (
+                    <Tooltip title="Crear paciente" placement="right">
                       <PersonAddIcon />
-                    ) : index === 2 ? (
-                      <Link to="/pacientes"><PersonSearchIcon /></Link>
-                    ) : index === 3 ? (
-                      <Link to="/"><LocalHospitalIcon /></Link>
-                    ): index === 4 ? (
-                      <Link to="/tienda"><LocalGroceryStoreIcon /></Link>
-                    ) : (
-                      <Link to="/stock"><InventoryIcon /></Link>
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            )
-          )}
+                    </Tooltip>
+                  ) : index === 2 ? (
+                    <Tooltip title="Lista de pacientes" placement="right">
+                      <Link to="/pacientes">
+                        <PersonSearchIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : index === 3 ? (
+                    <Tooltip title="Historias" placement="right">
+                      <Link to="/">
+                        <LocalHospitalIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : index === 4 ? (
+                    <Tooltip title="Vender producto" placement="right">
+                      <Link to="/tienda">
+                        <LocalGroceryStoreIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Almacen" placement="right">
+                      <Link to="/stock">
+                        <InventoryIcon />
+                      </Link>
+                    </Tooltip>
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
         <Divider />
         <List>
-          {["Cuentas", "Estadisticas", "Sistemas", "Configuracion"].map(
-            (text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
+          {[
+            <Link to="/cuentas">Cuentas</Link>,
+            <Link to="/estadisticas">Estadisticas</Link>,
+            <Link to="/sistemas">Sistemas</Link>,
+            <Link to="/configuracion">Configuracion</Link>,
+          ].map((text, index) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {index === 0 ? (
-                      <Link to="/cuentas"><AccountBalanceWalletIcon/></Link>
-                    ) : index === 1 ? (
-                      <Link to="/"><AnalyticsIcon /></Link>
-                    ) : index === 2 ? (
-                      <Link to="/"><ComputerIcon /></Link>
-                    ) : index === 3 ? (
-                      <Link to="/configuracion"><SettingsIcon /></Link>
-                    ) : (
-                      <Link to="/"><InventoryIcon /></Link>
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            )
-          )}
+                  {index === 0 ? (
+                    <Tooltip title="Cuentas" placement="right">
+                      <Link to="/cuentas">
+                        <AccountBalanceWalletIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : index === 1 ? (
+                    <Tooltip title="Estadisticas" placement="right">
+                      <Link to="/estadisticas">
+                        <AnalyticsIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : index === 2 ? (
+                    <Tooltip title="Sistemas" placement="right">
+                      <Link to="/sistemas">
+                        <ComputerIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : index === 3 ? (
+                    <Tooltip title="Configuracion" placement="right">
+                      <Link to="/configuracion">
+                        <SettingsIcon />
+                      </Link>
+                    </Tooltip>
+                  ) : (
+                    <Link to="/">
+                      <InventoryIcon />
+                    </Link>
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Dialog open={openModal} onClose={handleCloseModal}>
           <form onSubmit={handleSubmit} method="post">
-            <DialogTitle style={{backgroundColor:"#155E30", color:"white"}}>Registro de paciente</DialogTitle>
+            <DialogTitle style={{ backgroundColor: "#155E30", color: "white" }}>
+              Registro de paciente
+            </DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -341,7 +390,7 @@ export default function NavBar({ children, titulo }) {
                 fullWidth
                 required
                 variant="standard"
-                InputLabelProps={{ shrink: true }}  
+                InputLabelProps={{ shrink: true }}
                 onChange={(e) =>
                   handleChange(e.target.value, "fecha_nacimiento")
                 }

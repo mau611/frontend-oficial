@@ -322,12 +322,13 @@ const Agenda = () => {
   const getEventosBD = async () => {
     const response = await axios.get(`${endpoint}/consultas`);
     response.data.map((ev) => {
+      let nombre = setearNombreEvento(ev)
       setEvents((prev) => [
         ...prev,
         {
           start: new Date(ev.start),
           end: new Date(ev.end),
-          title: ev.paciente.nombres + " " + ev.paciente.apellidos,
+          title: nombre,
           resourceId: ev.consultorio_id,
           paciente: ev.paciente,
           evId: ev.id,
@@ -337,6 +338,16 @@ const Agenda = () => {
       ]);
     });
   };
+
+  const setearNombreEvento = (ev) =>{
+    let aux = "";
+    if(ev.facturas.length != 0){
+      aux = "$. " + ev.paciente.nombres + " " + ev.paciente.apellidos
+    } else {
+      aux = ev.paciente.nombres + " " + ev.paciente.apellidos
+    }
+    return aux
+  }
 
   const localizer = momentLocalizer(moment);
   const handleSelectSlot = useCallback(
@@ -617,7 +628,7 @@ const Agenda = () => {
             <DialogContent>
               <Accordion style={{ width: "500px" }}>
                 <Accordion.Item eventKey="0">
-                  <Accordion.Header>Cobros</Accordion.Header>
+                  <Accordion.Header>Facturas</Accordion.Header>
                   <Accordion.Body>
                     <Table striped bordered hover size="sm">
                       <thead>
@@ -642,7 +653,91 @@ const Agenda = () => {
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">
-                  <Accordion.Header>Cobrar Paciente</Accordion.Header>
+                  <Accordion.Header>Bonos</Accordion.Header>
+                  <Accordion.Body>
+                    <br />
+                    <div>
+                      {auxPaciente.bonos == undefined ? (
+                        "nada"
+                      ) : (
+                        <Container>
+                          Sesiones paciente:
+                          {auxPaciente.bonos.map((bono) => (
+                            <Row>
+                              <Col>
+                                {bono.nombre} x{bono.sesiones}
+                              </Col>
+                              <Col>Restantes: {bono.restantes}</Col>
+                              {bono.restantes > 0 ? (
+                                <Col>
+                                  <ButtonB
+                                    style={{ width: "70%" }}
+                                    size="sm"
+                                    variant="link"
+                                    onClick={() => consumirBono(bono.id)}
+                                  >
+                                    Consumir
+                                  </ButtonB>
+                                </Col>
+                              ) : (
+                                <Col>
+                                  <ButtonB
+                                    style={{ width: "100%" }}
+                                    size="sm"
+                                    variant="outline-secondary"
+                                    disabled
+                                  >
+                                    Bono consumido
+                                  </ButtonB>
+                                </Col>
+                              )}
+                              <hr />
+                            </Row>
+                          ))}
+                        </Container>
+                      )}
+                      <br />
+                    </div>
+                    <div>
+                      <TextField
+                        id="outlined-basic"
+                        label="Nombre"
+                        variant="outlined"
+                        style={{ width: 200 }}
+                        value={nombreBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "nombreBono")
+                        }
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Sesiones"
+                        type={"number"}
+                        variant="outlined"
+                        style={{ width: 110 }}
+                        value={sesionesBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "sesionesBono")
+                        }
+                      />
+                      <TextField
+                        id="outlined-basic"
+                        label="Monto"
+                        variant="outlined"
+                        style={{ width: 100 }}
+                        value={costoBono}
+                        onChange={(e) =>
+                          setValoresBono(e.target.value, "costoBono")
+                        }
+                      />
+                      <IconButton aria-label="add to favorites">
+                        <PriceCheckIcon onClick={crearBono} />
+                      </IconButton>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Facturar</Accordion.Header>
                   <Accordion.Body>
                     <br />
                     <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 400 }}>
@@ -728,90 +823,7 @@ const Agenda = () => {
                     </FormControl>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion.Item eventKey="2">
-                  <Accordion.Header>Crear Bono</Accordion.Header>
-                  <Accordion.Body>
-                    <br />
-                    <div>
-                      {auxPaciente.bonos == undefined ? (
-                        "nada"
-                      ) : (
-                        <Container>
-                          Sesiones paciente:
-                          {auxPaciente.bonos.map((bono) => (
-                            <Row>
-                              <Col>
-                                {bono.nombre} x{bono.sesiones}
-                              </Col>
-                              <Col>Restantes: {bono.restantes}</Col>
-                              {bono.restantes > 0 ? (
-                                <Col>
-                                  <ButtonB
-                                    style={{ width: "70%" }}
-                                    size="sm"
-                                    variant="link"
-                                    onClick={() => consumirBono(bono.id)}
-                                  >
-                                    Consumir
-                                  </ButtonB>
-                                </Col>
-                              ) : (
-                                <Col>
-                                  <ButtonB
-                                    style={{ width: "100%" }}
-                                    size="sm"
-                                    variant="outline-secondary"
-                                    disabled
-                                  >
-                                    Bono consumido
-                                  </ButtonB>
-                                </Col>
-                              )}
-                              <hr />
-                            </Row>
-                          ))}
-                        </Container>
-                      )}
-                      <br />
-                    </div>
-                    <div>
-                      <TextField
-                        id="outlined-basic"
-                        label="Nombre"
-                        variant="outlined"
-                        style={{ width: 200 }}
-                        value={nombreBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "nombreBono")
-                        }
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Sesiones"
-                        type={"number"}
-                        variant="outlined"
-                        style={{ width: 110 }}
-                        value={sesionesBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "sesionesBono")
-                        }
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Monto"
-                        variant="outlined"
-                        style={{ width: 100 }}
-                        value={costoBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "costoBono")
-                        }
-                      />
-                      <IconButton aria-label="add to favorites">
-                        <PriceCheckIcon onClick={crearBono} />
-                      </IconButton>
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
+                
               </Accordion>
             </DialogContent>
             <DialogActions>
