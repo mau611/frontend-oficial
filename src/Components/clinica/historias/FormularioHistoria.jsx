@@ -65,7 +65,7 @@ const FormularioHistoria = () => {
       />
       <br />
       <div>
-        Seleccione una Fecha
+        Elija una Fecha
         <br />
         <Autocomplete
         required
