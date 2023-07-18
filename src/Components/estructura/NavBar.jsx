@@ -253,7 +253,7 @@ export default function NavBar({ children, titulo }) {
                     </Tooltip>
                   ) : index === 3 ? (
                     <Tooltip title="Historias" placement="right">
-                      <Link to="/">
+                      <Link to="/clinica">
                         <LocalHospitalIcon />
                       </Link>
                     </Tooltip>

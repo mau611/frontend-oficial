@@ -44,7 +44,7 @@ import { CloseButton } from "react-bootstrap";
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -470,11 +470,13 @@ const Agenda = () => {
           keepMounted
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
+          fullWidth={true}
+          maxWidth={"sm"}
         >
           <DialogTitle style={{backgroundColor:"#155E30", color:"white"}}>{"Agendar cita"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              En esta ventana de dialogo podr&aacute;s agendar una cita
+              En esta ventana podr&aacute;s agendar una cita.
             </DialogContentText>
             <br />
             <Autocomplete
@@ -500,18 +502,6 @@ const Agenda = () => {
               )}
             />
             <br />
-            <TextField
-              required
-              onChange={(e) => setDetalleTratamiento(e.target.value)}
-              value={detalleTratamiento}
-              id="detallesTratamiento"
-              name="detalles"
-              placeholder="Mencione los detalles del tratamiento"
-              multiline
-              fullWidth
-            />
-            <br />
-            <br />
             <Autocomplete
               required
               freeSolo
@@ -533,6 +523,18 @@ const Agenda = () => {
                 />
               )}
             />
+            <br />
+            <TextField
+              required
+              onChange={(e) => setDetalleTratamiento(e.target.value)}
+              value={detalleTratamiento}
+              id="detallesTratamiento"
+              name="detalles"
+              placeholder="Mencione los detalles de la consulta"
+              multiline
+              fullWidth
+            />
+            <br />
             <br />
             <Autocomplete
               required
