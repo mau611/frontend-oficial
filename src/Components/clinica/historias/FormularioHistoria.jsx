@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const endpoint = "http://localhost:8000/api";
 
 const FormularioHistoria = () => {
+  const navigate = useNavigate();
   const dataFetchedRef = useRef(false);
   const clickRef = useRef(null);
   const [paciente, setPaciente] = useState([]);
@@ -58,10 +60,25 @@ const FormularioHistoria = () => {
     setCitas(response.data.citas);
   };
 
-  const llenarFicha = () => {
+  const llenarFicha = async () => {
+    console.log(opcionHistoria,paciente, cita)
     console.log(diagnostico, evaluacionObjetiva, evaluacionSubjetiva)
     console.log(evolucion)
-
+    await axios.post(`${endpoint}/historia`, {
+      paciente_id: paciente.split(' ')[0],
+      consulta_id: cita.split(' ')[0],
+      diagnostico: diagnostico,
+      evaluacion_objetiva: evaluacionObjetiva,
+      evaluacion_subjetiva: evaluacionSubjetiva,
+      evolucion: evolucion,
+      opcion: opcionHistoria
+    })
+    .then(function(){
+      window.alert("historia guardada de manera exitosa")
+      navigate(0)
+    }).catch(function(error){
+      window.alert('Hubo un error guardando los datos')
+    });
   }
   return (
     <div>
@@ -138,7 +155,6 @@ const FormularioHistoria = () => {
           <Box
             component="form"
             noValidate
-            autoComplete="off"
           >
             <TextField
               id="diagnostico"
@@ -169,7 +185,6 @@ const FormularioHistoria = () => {
           <Box
             component="form"
             noValidate
-            autoComplete="off"
           >
             <TextField
               id="evolucion"
