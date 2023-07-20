@@ -25,7 +25,6 @@ const Paciente = () => {
   const getPaciente = async () => {
     const response = await axios.get(`${endpoint}/paciente/${id}`);
     setPaciente(response.data);
-    console.log(paciente);
   };
 
   return (
@@ -55,7 +54,7 @@ const Paciente = () => {
         <Documentos/>
       </Tab>
       <Tab eventKey="historial" title="Historial Clinico">
-        <Historial citas={paciente.citas}/>
+        <Historial citas={paciente.citas} diagnosticos={paciente.diagnosticos}/>
       </Tab>
     </Tabs>
     </NavBar>

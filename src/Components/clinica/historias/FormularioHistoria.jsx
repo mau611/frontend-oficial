@@ -78,6 +78,7 @@ const FormularioHistoria = () => {
       navigate(0)
     }).catch(function(error){
       window.alert('Hubo un error guardando los datos')
+      console.log(error)
     });
   }
   return (
