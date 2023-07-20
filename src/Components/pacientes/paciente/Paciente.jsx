@@ -55,7 +55,7 @@ const Paciente = () => {
         <Documentos/>
       </Tab>
       <Tab eventKey="historial" title="Historial Clinico">
-        <Historial/>
+        <Historial citas={paciente.citas}/>
       </Tab>
     </Tabs>
     </NavBar>
