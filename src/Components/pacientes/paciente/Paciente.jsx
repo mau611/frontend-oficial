@@ -16,7 +16,7 @@ const endpoint = "http://localhost:8000/api";
 const Paciente = () => {
   const { id } = useParams();
   const [paciente, setPaciente] = useState({});
-  const [key, setKey] = useState('home');
+  const [key, setKey] = useState("home");
 
   useEffect(() => {
     getPaciente();
@@ -30,33 +30,36 @@ const Paciente = () => {
   return (
     <NavBar>
       <h4>
-        Paciente: {paciente.nombres} {paciente.apellidos}
+        {paciente.nombres} {paciente.apellidos}
       </h4>
       <Tabs
-      id="controlled-tab-example"
-      activeKey={key}
-      onSelect={(k) => setKey(k)}
-      className="mb-3"
-    >
-      <Tab eventKey="paciente" title="Detalle del paciente">
-        <DetallesPaciente/>
-      </Tab>
-      <Tab eventKey="filiacion" title="Filiacion">
-        <Filiacion/>
-      </Tab>
-      <Tab eventKey="contabilidad" title="Contabilidad">
-        <Contabilidad/>
-      </Tab>
-      <Tab eventKey="bonos" title="Bonos">
-        <Bonos/>
-      </Tab>
-      <Tab eventKey="documentos" title="Documentos">
-        <Documentos/>
-      </Tab>
-      <Tab eventKey="historial" title="Historial Clinico">
-        <Historial citas={paciente.citas} diagnosticos={paciente.diagnosticos}/>
-      </Tab>
-    </Tabs>
+        id="controlled-tab-example"
+        activeKey={key}
+        onSelect={(k) => setKey(k)}
+        className="mb-3"
+      >
+        <Tab eventKey="paciente" title="Detalle del paciente">
+          <DetallesPaciente diagnosticos={paciente.diagnosticos} paciente_id={paciente.id}/>
+        </Tab>
+        <Tab eventKey="filiacion" title="Filiacion">
+          <Filiacion />
+        </Tab>
+        <Tab eventKey="contabilidad" title="Contabilidad">
+          <Contabilidad />
+        </Tab>
+        <Tab eventKey="bonos" title="Bonos">
+          <Bonos />
+        </Tab>
+        <Tab eventKey="documentos" title="Documentos">
+          <Documentos />
+        </Tab>
+        <Tab eventKey="historial" title="Historial Clinico">
+          <Historial
+            citas={paciente.citas}
+            diagnosticos={paciente.diagnosticos}
+          />
+        </Tab>
+      </Tabs>
     </NavBar>
   );
 };

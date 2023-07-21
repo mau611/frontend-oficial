@@ -29,7 +29,6 @@ const FormularioHistoria = () => {
   const [evaluacionObjetiva, setEvaluacionObjetiva] = useState("");
   const [evaluacionSubjetiva, setEvaluacionSubjetiva] = useState("");
   const [evolucion, setEvolucion] = useState("");
-  
 
   useEffect(() => {
     if (dataFetchedRef.current) return;
@@ -44,10 +43,10 @@ const FormularioHistoria = () => {
   };
 
   const seleccionarFicha = (event) => {
-    setDiagnostico("")
-    setEvaluacionObjetiva("")
-    setEvaluacionSubjetiva("")
-    setEvolucion("")
+    setDiagnostico("");
+    setEvaluacionObjetiva("");
+    setEvaluacionSubjetiva("");
+    setEvolucion("");
     setOpcionHistoria(event.target.value);
   };
 
@@ -61,26 +60,25 @@ const FormularioHistoria = () => {
   };
 
   const llenarFicha = async () => {
-    console.log(opcionHistoria,paciente, cita)
-    console.log(diagnostico, evaluacionObjetiva, evaluacionSubjetiva)
-    console.log(evolucion)
-    await axios.post(`${endpoint}/historia`, {
-      paciente_id: paciente.split(' ')[0],
-      consulta_id: cita.split(' ')[0],
-      diagnostico: diagnostico,
-      evaluacion_objetiva: evaluacionObjetiva,
-      evaluacion_subjetiva: evaluacionSubjetiva,
-      evolucion: evolucion,
-      opcion: opcionHistoria
-    })
-    .then(function(){
-      window.alert("historia guardada de manera exitosa")
-      navigate(0)
-    }).catch(function(error){
-      window.alert('Hubo un error guardando los datos')
-      console.log(error)
-    });
-  }
+    await axios
+      .post(`${endpoint}/historia`, {
+        paciente_id: paciente.split(" ")[0],
+        consulta_id: cita.split(" ")[0],
+        diagnostico: diagnostico,
+        evaluacion_objetiva: evaluacionObjetiva,
+        evaluacion_subjetiva: evaluacionSubjetiva,
+        evolucion: evolucion,
+        opcion: opcionHistoria,
+      })
+      .then(function () {
+        window.alert("historia guardada de manera exitosa");
+        navigate(0);
+      })
+      .catch(function (error) {
+        window.alert("Hubo un error guardando los datos");
+        console.log(error);
+      });
+  };
   return (
     <div>
       Seleccione un paciente
@@ -153,52 +151,50 @@ const FormularioHistoria = () => {
       <br />
       <div>
         {opcionHistoria == "nueva" ? (
-          <Box
-            component="form"
-            noValidate
-          >
+          <Box component="form" noValidate>
             <TextField
               id="diagnostico"
               label="Diagnostico"
               fullWidth
-              onChange={(e)=>setDiagnostico(e.target.value)}
+              onChange={(e) => setDiagnostico(e.target.value)}
             />
-            <br /><br />
+            <br />
+            <br />
             <TextField
               id="evaluacionObjetiva-textarea"
               label="Evaluacion objetiva"
               maxRows={6}
               multiline
               fullWidth
-              onChange={(e)=>setEvaluacionObjetiva(e.target.value)}
+              onChange={(e) => setEvaluacionObjetiva(e.target.value)}
             />
-            <br /><br />
+            <br />
+            <br />
             <TextField
               id="evaluacionSubjetiva-textarea"
               label="Evaluacion subjetiva"
               maxRows={6}
               multiline
               fullWidth
-              onChange={(e)=>setEvaluacionSubjetiva(e.target.value)}
+              onChange={(e) => setEvaluacionSubjetiva(e.target.value)}
             />
           </Box>
         ) : (
-          <Box
-            component="form"
-            noValidate
-          >
+          <Box component="form" noValidate>
             <TextField
               id="evolucion"
               label="Evolucion del paciente"
               rows={7}
               multiline
               fullWidth
-              onChange={(e)=>setEvolucion(e.target.value)}
+              onChange={(e) => setEvolucion(e.target.value)}
             />
           </Box>
         )}
         <br />
-        <Button variant="contained" color="success" onClick={llenarFicha}>Guardar</Button>
+        <Button variant="contained" color="success" onClick={llenarFicha}>
+          Guardar
+        </Button>
       </div>
     </div>
   );

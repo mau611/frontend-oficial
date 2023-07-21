@@ -2,7 +2,9 @@ import React from 'react'
 
 const Filiacion = () => {
   return (
-    <div>Filiacion</div>
+    <div style={{textAlign:"justify"}}>
+      <h3>Datos Personales</h3>
+    </div>
   )
 }
 
