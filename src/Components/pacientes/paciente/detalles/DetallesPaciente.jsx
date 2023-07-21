@@ -10,6 +10,9 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
@@ -22,6 +25,7 @@ import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import React from "react";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
+import { FormControl } from "react-bootstrap";
 
 const actions = [
   { icon: <AssignmentIcon />, name: "Agregar Diagnostico", option: 1 },
@@ -31,39 +35,59 @@ const actions = [
 const endpoint = "http://localhost:8000/api";
 
 const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
-  const [open, setOpen] = React.useState(false);
-  const [dx, setDiagnostico] = React.useState("");
+  const [openDx, setOpenDx] = React.useState(false);
+  const [openTx, setOpenTx] = React.useState(false);
+  const [diagnostico, setDiagnostico] = React.useState("");
+  const [tratamiento, setTratamiento] = React.useState("");
+  const [dxId, setDxId] = React.useState("");
   const navigate = useNavigate();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    setOpenDx(false);
+    setOpenTx(false);
   };
 
   const agregar = (opcion) => {
     if (opcion == 1) {
-      setOpen(!open);
+      setOpenDx(!openDx);
+    } else {
+      setOpenTx(!openTx);
     }
   };
   const guardarDiagnostico = async () => {
     await axios
       .post(`${endpoint}/diagnostico`, {
-        diagnostico: dx,
+        diagnostico: diagnostico,
         paciente_id: paciente_id,
       })
       .then(function () {
         window.alert("Exito");
         setDiagnostico("");
-        setOpen(!open);
+        setOpenDx(!openDx);
         navigate(0);
       })
-      .catch(function () {
+      .catch(function (error) {
         window.alert("error");
         setDiagnostico("");
-        setOpen(!open);
+        setOpenDx(!openDx);
+      });
+  };
+  const guardarTratamiento = async () => {
+    await axios
+      .post(`${endpoint}/tratamiento`, {
+        tratamiento: tratamiento,
+        diagnostico_id: dxId,
+      })
+      .then(function () {
+        window.alert("Exito");
+        setTratamiento("");
+        setDxId("");
+        setOpenDx(!openDx);
+        navigate(0);
+      })
+      .catch(function (error) {
+        window.alert("error");
+        console.log(error)
       });
   };
   return (
@@ -112,7 +136,7 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
         </Box>
       </div>
       <div>
-        <Dialog open={open} onClose={handleClose} fullWidth>
+        <Dialog open={openDx} onClose={handleClose} fullWidth>
           <DialogTitle>Ingrese un nuevo diagnostico</DialogTitle>
           <DialogContent>
             <TextField
@@ -123,13 +147,53 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
               type="text"
               fullWidth
               variant="standard"
-              value={dx}
+              value={diagnostico}
               onChange={(e) => setDiagnostico(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
             <Button onClick={guardarDiagnostico}>Guardar</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
+      <div>
+        <Dialog open={openTx} onClose={handleClose} fullWidth>
+          <DialogTitle>Agregar Tratamiento</DialogTitle>
+          <DialogContent>
+            <InputLabel id="demo-simple-select-label">Diagnostico</InputLabel>
+            <Select
+              fullWidth
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={dxId}
+              label="Tratamiento"
+              onChange={(e) => setDxId(e.target.value)}
+            >
+              {diagnosticos?.map((diagnostico) => (
+                <MenuItem value={diagnostico.id}>
+                  {diagnostico.diagnostico}
+                </MenuItem>
+              ))}
+            </Select>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="diagnostico"
+              label="Paciente con:"
+              type="text"
+              fullWidth
+              variant="standard"
+              multiline
+              rows={5}
+              value={tratamiento}
+              onChange={(e) => setTratamiento(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancelar</Button>
+            <Button onClick={guardarTratamiento}>Guardar</Button>
           </DialogActions>
         </Dialog>
       </div>
