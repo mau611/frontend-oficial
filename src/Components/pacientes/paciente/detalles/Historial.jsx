@@ -38,39 +38,43 @@ const Historial = ({ citas, diagnosticos }) => {
       {diagnosticos?.map((diagnostico) => diagnostico.diagnostico + "; ")}
       <br />
       {citas?.map((cita) => (
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{color:"white"}}/>}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            style={{ backgroundColor: "#155E30", color:"white" }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={8}>
-                  Paciente atendido en: {cita.consultorio.nombre}
+        <div>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              style={{ backgroundColor: "#155E30", color: "white" }}
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={8}>
+                    Paciente atendido en: {cita.consultorio.nombre}
+                  </Grid>
+                  <Grid item xs={4} style={{ textAlign: "right" }}>
+                    Fecha:{" "}
+                    {new Date("" + cita.start).toLocaleDateString("en-GB")}
+                  </Grid>
                 </Grid>
-                <Grid item xs={4} style={{ textAlign: "right" }}>
-                  Fecha: {new Date("" + cita.start).toLocaleDateString("en-GB")}
-                </Grid>
-              </Grid>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <strong>Detalle de consulta:</strong> {cita.title}
-            <Typography>
-              {cita.historias?.map((historia) => (
-                <div>
-                  {mostrar(
-                    historia.evaluacion_objetiva,
-                    historia.evaluacion_subjetiva,
-                    historia.evolucion
-                  )}
-                </div>
-              ))}
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <strong>Detalle de consulta:</strong> {cita.title}
+              <Typography>
+                {cita.historias?.map((historia) => (
+                  <div>
+                    {mostrar(
+                      historia.evaluacion_objetiva,
+                      historia.evaluacion_subjetiva,
+                      historia.evolucion
+                    )}
+                  </div>
+                ))}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <hr />
+        </div>
       ))}
     </div>
   );

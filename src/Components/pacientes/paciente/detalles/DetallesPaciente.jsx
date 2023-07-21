@@ -21,6 +21,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import React from "react";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const actions = [
   { icon: <AssignmentIcon />, name: "Agregar Diagnostico", option: 1 },
@@ -29,9 +30,10 @@ const actions = [
 
 const endpoint = "http://localhost:8000/api";
 
-const DetallesPaciente = ({ diagnosticos, pacienteId }) => {
+const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
   const [open, setOpen] = React.useState(false);
-  const [diagnostico, setDiagnostico] = React.useState("");
+  const [dx, setDiagnostico] = React.useState("");
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,13 +50,20 @@ const DetallesPaciente = ({ diagnosticos, pacienteId }) => {
   };
   const guardarDiagnostico = async () => {
     await axios
-    .post(`${endpoint}/historia`, {
-      diagnostico: diagnostico,
-      paciente_id: pacienteId,
-      
-    })
+      .post(`${endpoint}/diagnostico`, {
+        diagnostico: dx,
+        paciente_id: paciente_id,
+      })
       .then(function () {
-        window.alert("diagnostico guardado con exito");
+        window.alert("Exito");
+        setDiagnostico("");
+        setOpen(!open);
+        navigate(0);
+      })
+      .catch(function () {
+        window.alert("error");
+        setDiagnostico("");
+        setOpen(!open);
       });
   };
   return (
@@ -114,12 +123,13 @@ const DetallesPaciente = ({ diagnosticos, pacienteId }) => {
               type="text"
               fullWidth
               variant="standard"
-              onChange={setDiagnostico}
+              value={dx}
+              onChange={(e) => setDiagnostico(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
-            <Button onClick={() => guardarDiagnostico()}>Guardar</Button>
+            <Button onClick={guardarDiagnostico}>Guardar</Button>
           </DialogActions>
         </Dialog>
       </div>
