@@ -16,11 +16,18 @@ const endpoint = "http://localhost:8000/api";
 const Paciente = () => {
   const { id } = useParams();
   const [paciente, setPaciente] = useState({});
+  const [profesionales, setProfesionales] = React.useState({});
   const [key, setKey] = useState("home");
 
   useEffect(() => {
     getPaciente();
+    getProfesionalACargo();
   }, []);
+
+  const getProfesionalACargo = async () => {
+    const response = await axios.get(`${endpoint}/paciente/profesionales/${paciente.id}`);
+    setProfesionales(response.data);
+  };
 
   const getPaciente = async () => {
     const response = await axios.get(`${endpoint}/paciente/${id}`);
@@ -39,9 +46,12 @@ const Paciente = () => {
         className="mb-3"
       >
         <Tab eventKey="paciente" title="Detalle del paciente">
-          <DetallesPaciente diagnosticos={paciente.diagnosticos} paciente_id={paciente.id}/>
+          <DetallesPaciente
+            diagnosticos={paciente.diagnosticos}
+            paciente_id={paciente.id}
+          />
         </Tab>
-        <Tab eventKey="filiacion" title="Filiacion">
+        <Tab eventKey="filiacion" title="Filiacion">ß
           <Filiacion />
         </Tab>
         <Tab eventKey="contabilidad" title="Contabilidad">
@@ -57,6 +67,7 @@ const Paciente = () => {
           <Historial
             citas={paciente.citas}
             diagnosticos={paciente.diagnosticos}
+            profesionales = {profesionales}
           />
         </Tab>
       </Tabs>

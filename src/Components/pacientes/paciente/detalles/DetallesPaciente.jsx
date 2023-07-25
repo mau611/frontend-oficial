@@ -12,6 +12,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   SpeedDial,
   SpeedDialAction,
@@ -22,7 +23,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
 import { FormControl } from "react-bootstrap";
@@ -34,7 +35,7 @@ const actions = [
 
 const endpoint = "http://localhost:8000/api";
 
-const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
+const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
   const [openDx, setOpenDx] = React.useState(false);
   const [openTx, setOpenTx] = React.useState(false);
   const [diagnostico, setDiagnostico] = React.useState("");
@@ -42,9 +43,14 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
   const [dxId, setDxId] = React.useState("");
   const navigate = useNavigate();
 
+  
+
   const handleClose = () => {
     setOpenDx(false);
     setOpenTx(false);
+    setDiagnostico("");
+    setTratamiento("");
+    setDxId("");
   };
 
   const agregar = (opcion) => {
@@ -82,16 +88,35 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
         window.alert("Exito");
         setTratamiento("");
         setDxId("");
-        setOpenDx(!openDx);
+        setOpenTx(!openDx);
         navigate(0);
       })
       .catch(function (error) {
         window.alert("error");
-        console.log(error)
+        console.log(error);
+        setOpenDx(!openTx);
       });
+  };
+  const listaTratamiento = (tratamiento, delimitador) => {
+    var txs = tratamiento.split(delimitador);
+    return (
+      <div>
+        <ul>
+          {txs.map((tx) => (
+            <li>{tx}</li>
+          ))}
+        </ul>
+      </div>
+    );
   };
   return (
     <div style={{ textAlign: "justify" }}>
+      <h4>Profesionales a cargo</h4>
+      <div>
+        <ul>
+          {console.log(profesionales)}
+        </ul>
+      </div>
       <h4>Diagnostico y tratamientos del paciente</h4>
       <div>
         <Grid container spacing={2}>
@@ -106,11 +131,14 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
                   <Typography>{diagnostico.diagnostico}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
-                  </Typography>
+                  {diagnostico.tratamientos?.map((tratamiento) => (
+                    <div>
+                      <strong>{tratamiento.fecha}</strong>
+                      <Paper elevation={3} style={{ padding: "10px" }}>
+                        {listaTratamiento(tratamiento.tratamiento, "\n")}
+                      </Paper>
+                    </div>
+                  ))}
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -162,13 +190,15 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
         <Dialog open={openTx} onClose={handleClose} fullWidth>
           <DialogTitle>Agregar Tratamiento</DialogTitle>
           <DialogContent>
-            <InputLabel id="demo-simple-select-label">Diagnostico</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              Seleccione un diagnostico
+            </InputLabel>
             <Select
               fullWidth
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={dxId}
-              label="Tratamiento"
+              label="Seleccione un diagnostico"
               onChange={(e) => setDxId(e.target.value)}
             >
               {diagnosticos?.map((diagnostico) => (
@@ -181,7 +211,7 @@ const DetallesPaciente = ({ diagnosticos, paciente_id }) => {
               autoFocus
               margin="dense"
               id="diagnostico"
-              label="Paciente con:"
+              label="Tratamiento:"
               type="text"
               fullWidth
               variant="standard"
