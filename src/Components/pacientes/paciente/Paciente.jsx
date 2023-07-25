@@ -58,7 +58,7 @@ const Paciente = () => {
           <Contabilidad />
         </Tab>
         <Tab eventKey="bonos" title="Bonos">
-          <Bonos />
+          <Bonos bonos={paciente.bonos}/>
         </Tab>
         <Tab eventKey="documentos" title="Documentos">
           <Documentos />
