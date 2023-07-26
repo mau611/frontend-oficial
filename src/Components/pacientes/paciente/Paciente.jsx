@@ -25,7 +25,9 @@ const Paciente = () => {
   }, []);
 
   const getProfesionalACargo = async () => {
-    const response = await axios.get(`${endpoint}/paciente/profesionales/${paciente.id}`);
+    const response = await axios.get(
+      `${endpoint}/paciente/profesionales/${paciente.id}`
+    );
     setProfesionales(response.data);
   };
 
@@ -52,13 +54,21 @@ const Paciente = () => {
           />
         </Tab>
         <Tab eventKey="filiacion" title="Filiacion">
-          <Filiacion />
+          <Filiacion
+            id={paciente.id}
+            nombres={paciente.nombres}
+            apellidos={paciente.apellidos}
+            ci={paciente.ci}
+            telefono={paciente.telefono}
+            sexo={paciente.sexo}
+            direccion={paciente.direccion}
+          />
         </Tab>
         <Tab eventKey="contabilidad" title="Contabilidad">
-          <Contabilidad citas={paciente.citas}/>
+          <Contabilidad citas={paciente.citas} />
         </Tab>
         <Tab eventKey="bonos" title="Bonos">
-          <Bonos bonos={paciente.bonos}/>
+          <Bonos bonos={paciente.bonos} />
         </Tab>
         <Tab eventKey="documentos" title="Documentos">
           <Documentos />
@@ -67,7 +77,7 @@ const Paciente = () => {
           <Historial
             citas={paciente.citas}
             diagnosticos={paciente.diagnosticos}
-            profesionales = {profesionales}
+            profesionales={profesionales}
           />
         </Tab>
       </Tabs>

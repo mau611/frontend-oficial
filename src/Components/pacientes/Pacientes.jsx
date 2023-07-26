@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import { DataGrid, esES } from '@mui/x-data-grid';
 import NavBar from "../estructura/NavBar";
-import { Box } from "@mui/material";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const columnas = [
   { field: "id", headerName: "Historia", width: 70 },

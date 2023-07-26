@@ -1,12 +1,65 @@
-import React from 'react'
 
-const Contabilidad = ({citas}) => {
+import React from "react";
+import Table from "react-bootstrap/Table";
+
+const Contabilidad = ({ citas }) => {
   return (
-    <div style={{textAlign:"justify"}}>
+    <div style={{ textAlign: "justify" }}>
       <h4>Facturas pagadas</h4>
-      {console.log(citas)}
+      <br />
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Numero de factura</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {citas?.map((cita) =>
+            cita.facturas?.map((factura) =>
+              factura.estado_pago == "pagado" ? (
+                <tr>
+                  <td>{factura.fecha}</td>
+                  <td>{factura.numero}</td>
+                  <td>{factura.total}</td>
+                </tr>
+              ) : (
+                <></>
+              )
+            )
+          )}
+        </tbody>
+      </Table>
+      <hr />
+      <h4>Pendientes de pago</h4>
+      <br />
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Numero de factura</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {citas?.map((cita) =>
+            cita.facturas?.map((factura) =>
+              factura.estado_pago == "no pagado" ? (
+                <tr>
+                  <td>{factura.fecha}</td>
+                  <td>{factura.numero}</td>
+                  <td>{factura.total}</td>
+                </tr>
+              ) : (
+                <></>
+              )
+            )
+          )}
+        </tbody>
+      </Table>
     </div>
-  )
-}
+  );
+};
 
-export default Contabilidad
+export default Contabilidad;
