@@ -1,8 +1,11 @@
 import React from 'react'
 
-const Contabilidad = () => {
+const Contabilidad = ({citas}) => {
   return (
-    <div>Contabilidad</div>
+    <div style={{textAlign:"justify"}}>
+      <h4>Facturas pagadas</h4>
+      {console.log(citas)}
+    </div>
   )
 }
 
