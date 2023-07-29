@@ -25,7 +25,7 @@ const Bonos = ({ bonos }) => {
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
                   sx={{ height: 140 }}
-                  image="https://cdn-icons-png.flaticon.com/512/1059/1059017.png"
+                  image="https://www.narzissenfest.at/en/wp-content/uploads/2013/10/ticket.png"
                   title="imagen bono" />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
@@ -36,10 +36,6 @@ const Bonos = ({ bonos }) => {
                     Precio: {bono.precio} Bs.
                   </Typography>
                 </CardContent>
-                <CardActions>
-                  <Button size="small">Consumir</Button>
-                  <Button size="small">Eliminar</Button>
-                </CardActions>
               </Card>
             </Grid>
           );

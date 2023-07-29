@@ -12,6 +12,7 @@ const Contabilidad = ({ citas }) => {
           <tr>
             <th>Fecha</th>
             <th>Numero de factura</th>
+            <th>Detalles del pago</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -22,7 +23,8 @@ const Contabilidad = ({ citas }) => {
                 <tr>
                   <td>{factura.fecha}</td>
                   <td>{factura.numero}</td>
-                  <td>{factura.total}</td>
+                  <td>{factura.detalles_pago}</td>
+                  <td>{factura.total} Bs</td>
                 </tr>
               ) : (
                 <></>

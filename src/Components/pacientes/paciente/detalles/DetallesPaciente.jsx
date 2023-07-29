@@ -124,9 +124,10 @@ const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
             <Grid item xs={4}>
               <Accordion>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
+                  style={{ backgroundColor: "#155E30", color: "white" }}
                 >
                   <Typography>{diagnostico.diagnostico}</Typography>
                 </AccordionSummary>
