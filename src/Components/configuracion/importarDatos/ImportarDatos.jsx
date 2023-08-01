@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const ImportarDatos = () => {
   const [archivo, setArchivo] = useState(null);

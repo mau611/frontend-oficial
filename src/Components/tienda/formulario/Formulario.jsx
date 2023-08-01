@@ -11,7 +11,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TablaProductos from "./TablaProductos";
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const Formulario = () => {
   const navigate = useNavigate();
