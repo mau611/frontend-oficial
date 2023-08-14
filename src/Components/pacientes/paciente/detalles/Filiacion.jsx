@@ -59,7 +59,7 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
           label="Nombres"
           variant="outlined"
           disabled={editar}
-          value={nombres}
+          value={nombre}
           InputLabelProps={{ shrink: true }}
           onChange={(e)=>setNombres(e.target.value)}
         />
@@ -68,7 +68,7 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
           label="Apellidos"
           variant="outlined"
           disabled={editar}
-          value={apellidos}
+          value={apellido}
           InputLabelProps={{ shrink: true }}
           onChange={(e)=>setApellidos(e.target.value)}
         />
@@ -78,7 +78,7 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
           label="Telefono"
           variant="outlined"
           disabled={editar}
-          value={telefono}
+          value={telef}
           InputLabelProps={{ shrink: true }}
           onChange={(e)=>setTelefono(e.target.value)}
         />
@@ -87,7 +87,7 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
           label="Carnet"
           variant="outlined"
           disabled={editar}
-          value={ci}
+          value={carnet}
           InputLabelProps={{ shrink: true }}
           onChange={(e)=>setCi(e.target.value)}
         />
@@ -97,7 +97,7 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
           label="Sexo"
           variant="outlined"
           disabled={editar}
-          value={sexo}
+          value={sex}
           InputLabelProps={{ shrink: true }}
           onChange={(e)=>setSexo(e.target.value)}
         />
