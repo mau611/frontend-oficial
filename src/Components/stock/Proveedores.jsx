@@ -28,7 +28,7 @@ const Columnas = [
   { field: "accion", headerName: "accion", width: 200 },
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const Proveedores = () => {
   const [state, setState] = useState({

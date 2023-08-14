@@ -15,7 +15,7 @@ const Columnas = [
   { field: "estado", headerName: "Estado consulta", width: 130 },
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://stilettoapi.com/api";
 
 const CrearEstadoCita = () => {
   const [state, setState] = useState({
