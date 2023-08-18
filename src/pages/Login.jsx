@@ -39,8 +39,8 @@ export default function Login() {
           href="/"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img src={logo} className="rounded w-20 h-20 mr-2 " alt="logo" />
-          Sistema - Shanti
+          <img src={logo} className="rounded w-30 h-20 mr-2 " alt="logo" />
+          SHANTI - SPA
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

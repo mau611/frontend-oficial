@@ -1,6 +1,8 @@
 import * as React from "react";
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
-import axios from "axios";
+import axioss from "axios";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -26,7 +28,7 @@ import AnalyticsIcon from "@mui/icons-material/AnalyticsOutlined";
 import ComputerIcon from "@mui/icons-material/ComputerOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LogoutIcon from '@mui/icons-material/Logout';
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -40,6 +42,8 @@ import {
   TextField,
 } from "@mui/material";
 import logoNav from "./../../navbar.png";
+import axios from "../../axios";
+import { useAuth } from "../../AuthContext";
 
 const drawerWidth = 240;
 const endpoint = "https://stilettoapi.com/api/paciente";
@@ -143,7 +147,7 @@ export default function NavBar({ children, titulo }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(endpoint, {
+    await axioss.post(endpoint, {
       nombres: state.nombres,
       apellidos: state.apellidos,
       telefono: state.telefono,
@@ -163,6 +167,45 @@ export default function NavBar({ children, titulo }) {
   const handleOnClick = (e, text) => {
     if (text === "Agregar Paciente") {
       handleOpenModal();
+    }else if(text === "Cerrar sesion"){
+      handleLogout();
+    }
+  };
+
+  const { user, setUser } = useAuth();
+
+  // check if user is logged in or not from server
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await axios.get("/user");
+        if (resp.status === 200) {
+          setUser(resp.data.data);
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          localStorage.removeItem("user");
+          window.location.href = "/";
+        }
+      }
+    })();
+  }, []);
+
+  // if user is not logged in, redirect to login page
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+
+  // logout user
+  const handleLogout = async () => {
+    try {
+      const resp = await axios.post("/logout");
+      if (resp.status === 200) {
+        localStorage.removeItem("user");
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -214,6 +257,7 @@ export default function NavBar({ children, titulo }) {
             <Link to="/clinica">Clinica</Link>,
             <Link to="/tienda">Tienda</Link>,
             <Link to="/stock">Stock</Link>,
+            "Cerrar sesion"
           ].map((text, index) => (
             <ListItem
               key={text}
@@ -263,11 +307,15 @@ export default function NavBar({ children, titulo }) {
                         <LocalGroceryStoreIcon />
                       </Link>
                     </Tooltip>
-                  ) : (
+                  ) : index === 5 ? (
                     <Tooltip title="Almacen" placement="right">
                       <Link to="/stock">
                         <InventoryIcon />
                       </Link>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Cerrar sesion" placement="right">
+                      <LogoutIcon />
                     </Tooltip>
                   )}
                 </ListItemIcon>
