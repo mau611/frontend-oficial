@@ -7,7 +7,7 @@ const inicio = () => {
   return (
     <div className="jumbotron text-center">
       <div className="container">
-        <div class="text-center">
+        <div className="flex flex-col items-center justify-center" >
           <img src={logo} className="rounded" width={300} alt="logo" />
         </div>
         <br />
