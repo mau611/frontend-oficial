@@ -33,7 +33,7 @@ const actions = [
   { icon: <FormatListNumberedIcon />, name: "Agregar Tratamiento", option: 2 },
 ];
 
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 
 const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
   const [openDx, setOpenDx] = React.useState(false);

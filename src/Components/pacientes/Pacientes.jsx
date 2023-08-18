@@ -13,7 +13,7 @@ const columnas = [
   { field: "sexo", headerName: "Sexo", width: 130 },
   { field: "direccion", headerName: "Direccion", width: 400 },
 ];
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 
 export const Pacientes = () => {
   const [pacientes, setPacientes] = useState([]);

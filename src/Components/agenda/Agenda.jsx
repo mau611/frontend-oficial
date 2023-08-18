@@ -44,7 +44,7 @@ import { CloseButton } from "react-bootstrap";
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

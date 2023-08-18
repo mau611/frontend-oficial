@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 
 const ProductosVenta = () => {
   const [state, setState] = useState({
