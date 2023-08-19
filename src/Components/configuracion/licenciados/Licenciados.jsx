@@ -15,7 +15,7 @@ const Columnas = [
   { field: "nombre", headerName: "Consultorio", width: 130 },
 ];
 
-const endpoint = "https://stilettoapi.com/api";
+const endpoint = "http://localhost:8000/api";
 
 const Licenciados = () => {
   const [state, setState] = useState({

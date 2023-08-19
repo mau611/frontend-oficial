@@ -46,7 +46,7 @@ import axios from "../../axios";
 import { useAuth } from "../../AuthContext";
 
 const drawerWidth = 240;
-const endpoint = "https://stilettoapi.com/api/paciente";
+const endpoint = "http://localhost:8000/api/paciente";
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -184,7 +184,7 @@ export default function NavBar({ children, titulo }) {
         }
       } catch (error) {
         if (error.response.status === 401) {
-          localStorage.removeItem("user");
+          //localStorage.removeItem("user");
           window.location.href = "/";
         }
       }
