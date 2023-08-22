@@ -5,7 +5,6 @@ import { useAuth } from "../AuthContext";
 import logo from "../shanti_transparencia.png";
 import "../Components/estructura/css/inicio.css";
 
-
 export default function Login() {
   const { setUser, csrfToken } = useAuth();
   const [error, setError] = React.useState(null);

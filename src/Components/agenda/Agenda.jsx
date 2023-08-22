@@ -100,7 +100,7 @@ const Agenda = () => {
   const [pacientes, setPacientes] = useState([]);
   const [tipoConsultas, setTipoConsultas] = useState([]);
   const [estadoCitas, setEstadoCitas] = useState([]);
-  const [paciente, setPaciente] = useState(null);
+  const [paciente, setPaciente] = useState("");
   const [tipoConsulta, setTipoConsulta] = useState(null);
   const [estadoCita, setEstadoCita] = useState("1 -  Por llegar");
   const [detalleTratamiento, setDetalleTratamiento] = useState("");
@@ -124,6 +124,13 @@ const Agenda = () => {
   const [nombreBono, setNombreBono] = useState("");
   const [sesionesBono, setSesionesBono] = useState(0);
   const [costoBono, setCostoBono] = useState(0);
+  //variables de errores
+  const [pacienteError, setPacienteError] = useState("");
+  const [tipoConsultaError, setTipoConsultaError] = useState("");
+  const [detallesError, setDetallesError] = useState("");
+  const [estadoCitaError, setEstadoCitaError] = useState("");
+  const [agendadoPorError, setAgendadoPorError] = useState("");
+
   const setValoresBono = (value, variable) => {
     if (variable == "nombreBono") {
       setNombreBono(value);
@@ -259,6 +266,11 @@ const Agenda = () => {
     setOpen(false);
     setProfesionalId("");
     setAuxFacturas([]);
+    setPacienteError("");
+    setTipoConsultaError("");
+    setDetallesError("");
+    setEstadoCitaError("");
+    setAgendadoPorError("");
   };
 
   const handleChangeMultiple = (event) => {
@@ -322,7 +334,7 @@ const Agenda = () => {
   const getEventosBD = async () => {
     const response = await axios.get(`${endpoint}/consultas`);
     response.data.map((ev) => {
-      let nombre = setearNombreEvento(ev)
+      let nombre = setearNombreEvento(ev);
       setEvents((prev) => [
         ...prev,
         {
@@ -339,15 +351,15 @@ const Agenda = () => {
     });
   };
 
-  const setearNombreEvento = (ev) =>{
+  const setearNombreEvento = (ev) => {
     let aux = "";
-    if(ev.facturas.length != 0){
-      aux = "$. " + ev.paciente.nombres + " " + ev.paciente.apellidos
+    if (ev.facturas.length != 0) {
+      aux = "$. " + ev.paciente.nombres + " " + ev.paciente.apellidos;
     } else {
-      aux = ev.paciente.nombres + " " + ev.paciente.apellidos
+      aux = ev.paciente.nombres + " " + ev.paciente.apellidos;
     }
-    return aux
-  }
+    return aux;
+  };
 
   const localizer = momentLocalizer(moment);
   const handleSelectSlot = useCallback(
@@ -401,19 +413,50 @@ const Agenda = () => {
     const tc = "" + tipoConsulta;
     const ec = "" + estadoCita;
     const pi = "" + profesionalId;
-    await axios.post(`${endpoint}/consulta`, {
-      title: detalleTratamiento,
-      start: "" + new Date(detalleEvento.start).toISOString(),
-      end: "" + new Date(detalleEvento.end).toISOString(),
-      estado: estadoCita,
-      id: detalleEvento.resourceId,
-      paciente_id: p.split(" ")[0],
-      tipoConsulta_id: tc.split(" ")[0],
-      estadoConsulta_id: ec.split(" ")[0],
-      profesional_id: pi.split(" ")[0],
-    });
-    handleClose();
-    navigate(0);
+    try {
+      await axios.post(`${endpoint}/consulta`, {
+        title: detalleTratamiento,
+        start: "" + new Date(detalleEvento.start).toISOString(),
+        end: "" + new Date(detalleEvento.end).toISOString(),
+        estado: estadoCita,
+        id: detalleEvento.resourceId,
+        paciente_id: p.split(" ")[0],
+        tipoConsulta_id: tc.split(" ")[0],
+        estadoConsulta_id: ec.split(" ")[0],
+        profesional_id: pi.split(" ")[0],
+      });
+      handleClose();
+      navigate(0);
+    } catch (error) {
+      if (error.response.status === 422) {
+        console.log(error.response.data.errors);
+        if (error.response.data.errors.paciente_id) {
+          setPacienteError(error.response.data.errors.paciente_id[0]);
+        } else {
+          setPacienteError("");
+        }
+        if (error.response.data.errors.tipo_consulta_id) {
+          setTipoConsultaError(error.response.data.errors.tipo_consulta_id[0]);
+        } else {
+          setTipoConsultaError("");
+        }
+        if (error.response.data.errors.title) {
+          setDetallesError(error.response.data.errors.title[0]);
+        } else {
+          setDetallesError("");
+        }
+        if (error.response.data.errors.estado_cita_id) {
+          setEstadoCitaError(error.response.data.errors.estado_cita_id[0]);
+        } else {
+          setEstadoCitaError("");
+        }
+        if (error.response.data.errors.profesional_id) {
+          setAgendadoPorError(error.response.data.errors.profesional_id[0]);
+        } else {
+          setAgendadoPorError("");
+        }
+      }
+    }
   };
 
   const resizeEvent = useCallback(({ event, start, end }) => {
@@ -473,7 +516,9 @@ const Agenda = () => {
           fullWidth={true}
           maxWidth={"sm"}
         >
-          <DialogTitle style={{backgroundColor:"#155E30", color:"white"}}>{"Agendar cita"}</DialogTitle>
+          <DialogTitle style={{ backgroundColor: "#155E30", color: "white" }}>
+            {"Agendar cita"}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
               En esta ventana podr&aacute;s agendar una cita.
@@ -501,6 +546,9 @@ const Agenda = () => {
                 />
               )}
             />
+            {pacienteError && (
+              <p className="text-sm text-red-600">{pacienteError}</p>
+            )}
             <br />
             <Autocomplete
               required
@@ -523,6 +571,9 @@ const Agenda = () => {
                 />
               )}
             />
+            {tipoConsultaError && (
+              <p className="text-sm text-red-600">{tipoConsultaError}</p>
+            )}
             <br />
             <TextField
               required
@@ -534,6 +585,9 @@ const Agenda = () => {
               multiline
               fullWidth
             />
+            {detallesError && (
+              <p className="text-sm text-red-600">{detallesError}</p>
+            )}
             <br />
             <br />
             <Autocomplete
@@ -557,6 +611,9 @@ const Agenda = () => {
                 />
               )}
             />
+            {estadoCitaError && (
+              <p className="text-sm text-red-600">{estadoCitaError}</p>
+            )}
             <br />
             <Autocomplete
               required
@@ -579,6 +636,9 @@ const Agenda = () => {
                 />
               )}
             />
+            {agendadoPorError && (
+              <p className="text-sm text-red-600">{agendadoPorError}</p>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
@@ -825,7 +885,6 @@ const Agenda = () => {
                     </FormControl>
                   </Accordion.Body>
                 </Accordion.Item>
-                
               </Accordion>
             </DialogContent>
             <DialogActions>

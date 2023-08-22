@@ -28,7 +28,7 @@ import AnalyticsIcon from "@mui/icons-material/AnalyticsOutlined";
 import ComputerIcon from "@mui/icons-material/ComputerOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -117,6 +117,13 @@ export default function NavBar({ children, titulo }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const [nombresError, setNombresError] = React.useState(null);
+  const [apellidosError, setApellidosError] = React.useState(null);
+  const [telefonoError, setTelefonoError] = React.useState(null);
+  const [nacimientoError, setNacimientoError] = React.useState(null);
+  const [ciError, setCiError] = React.useState(null);
+  const [sexoError, setSexoError] = React.useState(null);
+  const [direccionError, setDireccionError] = React.useState(null);
 
   const [state, setState] = React.useState({
     nombres: "",
@@ -139,7 +146,16 @@ export default function NavBar({ children, titulo }) {
   };
 
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModal = () => {
+    setNombresError("");
+    setApellidosError("");
+    setTelefonoError("");
+    setNacimientoError("");
+    setCiError("");
+    setSexoError("");
+    setDireccionError("");
+    setOpenModal(false);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -147,17 +163,58 @@ export default function NavBar({ children, titulo }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axioss.post(endpoint, {
-      nombres: state.nombres,
-      apellidos: state.apellidos,
-      telefono: state.telefono,
-      fecha_nacimiento: state.fecha_nacimiento,
-      ci: state.ci,
-      sexo: state.sexo,
-      direccion: state.direccion,
-      fecha_registro: "1996/05/4",
-    });
-    navigate(0);
+    try {
+      const resp = await axioss.post(endpoint, {
+        nombres: state.nombres,
+        apellidos: state.apellidos,
+        telefono: state.telefono,
+        fecha_nacimiento: state.fecha_nacimiento,
+        ci: state.ci,
+        sexo: state.sexo,
+        direccion: state.direccion,
+        fecha_registro: "1996/05/4",
+      });
+      navigate(0);
+    } catch (error) {
+      if (error.response.status === 422) {
+        console.log(error.response.data.errors);
+        if (error.response.data.errors.nombres) {
+          setNombresError(error.response.data.errors.nombres[0]);
+        } else {
+          setNombresError("");
+        }
+        if (error.response.data.errors.apellidos) {
+          setApellidosError(error.response.data.errors.apellidos[0]);
+        } else {
+          setApellidosError("");
+        }
+        if (error.response.data.errors.telefono) {
+          setTelefonoError(error.response.data.errors.telefono[0]);
+        } else {
+          setTelefonoError("");
+        }
+        if (error.response.data.errors.fecha_nacimiento) {
+          setNacimientoError(error.response.data.errors.fecha_nacimiento[0]);
+        } else {
+          setNacimientoError("");
+        }
+        if (error.response.data.errors.ci) {
+          setCiError(error.response.data.errors.ci[0]);
+        } else {
+          setCiError("");
+        }
+        if (error.response.data.errors.sexo) {
+          setSexoError(error.response.data.errors.sexo[0]);
+        } else {
+          setSexoError("");
+        }
+        if (error.response.data.errors.direccion) {
+          setDireccionError(error.response.data.errors.direccion[0]);
+        } else {
+          setDireccionError("");
+        }
+      }
+    }
   };
 
   const handleDrawerClose = () => {
@@ -167,7 +224,7 @@ export default function NavBar({ children, titulo }) {
   const handleOnClick = (e, text) => {
     if (text === "Agregar Paciente") {
       handleOpenModal();
-    }else if(text === "Cerrar sesion"){
+    } else if (text === "Cerrar sesion") {
       handleLogout();
     }
   };
@@ -257,7 +314,7 @@ export default function NavBar({ children, titulo }) {
             <Link to="/clinica">Clinica</Link>,
             <Link to="/tienda">Tienda</Link>,
             <Link to="/stock">Stock</Link>,
-            "Cerrar sesion"
+            "Cerrar sesion",
           ].map((text, index) => (
             <ListItem
               key={text}
@@ -403,6 +460,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "nombres")}
               />
+              {nombresError && (
+                <p className="text-sm text-red-600">{nombresError}</p>
+              )}
               <TextField
                 autoFocus
                 margin="dense"
@@ -415,6 +475,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "apellidos")}
               />
+              {apellidosError && (
+                <p className="text-sm text-red-600">{apellidosError}</p>
+              )}
               <TextField
                 autoFocus
                 margin="dense"
@@ -427,6 +490,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "telefono")}
               />
+              {telefonoError && (
+                <p className="text-sm text-red-600">{telefonoError}</p>
+              )}
               <TextField
                 label="fecha de nacimiento"
                 autoFocus
@@ -443,6 +509,9 @@ export default function NavBar({ children, titulo }) {
                   handleChange(e.target.value, "fecha_nacimiento")
                 }
               />
+              {nacimientoError && (
+                <p className="text-sm text-red-600">{nacimientoError}</p>
+              )}
               <TextField
                 autoFocus
                 margin="dense"
@@ -455,6 +524,7 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "ci")}
               />
+              {ciError && <p className="text-sm text-red-600">{ciError}</p>}
               <TextField
                 id="sexo"
                 type={"select"}
@@ -467,6 +537,7 @@ export default function NavBar({ children, titulo }) {
                 <MenuItem value={"masculino"}>Masculino</MenuItem>
                 <MenuItem value={"femenino"}>Femenino</MenuItem>
               </TextField>
+              {sexoError && <p className="text-sm text-red-600">{sexoError}</p>}
               <TextField
                 autoFocus
                 margin="dense"
@@ -479,6 +550,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "direccion")}
               />
+              {direccionError && (
+                <p className="text-sm text-red-600">{direccionError}</p>
+              )}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseModal}>Cancelar</Button>
