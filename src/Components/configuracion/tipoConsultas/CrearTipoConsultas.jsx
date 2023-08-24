@@ -16,7 +16,7 @@ const Columnas = [
   { field: "color", headerName: "Color", width: 130 },
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://api.shantispawellnesslife.com/api";
 
 const CrearTratamientos = () => {
   const [state, setState] = useState({

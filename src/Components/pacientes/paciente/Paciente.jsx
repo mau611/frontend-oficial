@@ -11,7 +11,7 @@ import Contabilidad from "./detalles/Contabilidad";
 import Bonos from "./detalles/Bonos";
 import Documentos from "./detalles/Documentos";
 import Historial from "./detalles/Historial";
-const endpoint = "http://localhost:8000/api";
+const endpoint = "https://api.shantispawellnesslife.com/api";
 
 const Paciente = () => {
   const { id } = useParams();
