@@ -101,7 +101,7 @@ const Agenda = () => {
   const [tipoConsultas, setTipoConsultas] = useState([]);
   const [estadoCitas, setEstadoCitas] = useState([]);
   const [paciente, setPaciente] = useState("");
-  const [tipoConsulta, setTipoConsulta] = useState(null);
+  const [tipoConsulta, setTipoConsulta] = useState("");
   const [estadoCita, setEstadoCita] = useState("1 -  Por llegar");
   const [detalleTratamiento, setDetalleTratamiento] = useState("");
   const [detalleEvento, setDetalleEvento] = useState("");
@@ -119,7 +119,7 @@ const Agenda = () => {
   const [selectEventId, setSelectEventId] = useState(0);
   const [profesionales, setProfesionales] = useState([]);
   const [profesionalId, setProfesionalId] = useState("");
-
+  
   //variables de bonos
   const [nombreBono, setNombreBono] = useState("");
   const [sesionesBono, setSesionesBono] = useState(0);
@@ -258,7 +258,7 @@ const Agenda = () => {
   const handleClose = () => {
     setPaciente("");
     setTipoConsulta("");
-    setEstadoCita("");
+    setEstadoCita("1 -  Por llegar");
     setDetalleTratamiento("");
     setDetalleEvento("");
     setAuxPaciente([]);
@@ -415,7 +415,7 @@ const Agenda = () => {
     const pi = "" + profesionalId;
     try {
       await axios.post(`${endpoint}/consulta`, {
-        title: detalleTratamiento,
+        title: ""+detalleTratamiento,
         start: "" + new Date(detalleEvento.start).toISOString(),
         end: "" + new Date(detalleEvento.end).toISOString(),
         estado: estadoCita,
@@ -435,8 +435,8 @@ const Agenda = () => {
         } else {
           setPacienteError("");
         }
-        if (error.response.data.errors.tipo_consulta_id) {
-          setTipoConsultaError(error.response.data.errors.tipo_consulta_id[0]);
+        if (error.response.data.errors.tipoConsulta_id) {
+          setTipoConsultaError(error.response.data.errors.tipoConsulta_id[0]);
         } else {
           setTipoConsultaError("");
         }
@@ -445,8 +445,8 @@ const Agenda = () => {
         } else {
           setDetallesError("");
         }
-        if (error.response.data.errors.estado_cita_id) {
-          setEstadoCitaError(error.response.data.errors.estado_cita_id[0]);
+        if (error.response.data.errors.estadoConsulta_id) {
+          setEstadoCitaError(error.response.data.errors.estadoConsulta_id[0]);
         } else {
           setEstadoCitaError("");
         }
