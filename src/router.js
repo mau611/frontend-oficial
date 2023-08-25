@@ -15,6 +15,7 @@ import Tienda from './Components/tienda/Tienda';
 import Cuentas from './Components/cuentas/Cuentas';
 import Paciente from './Components/pacientes/paciente/Paciente';
 import Estadisticas from './Components/estadisticas/Estadisticas';
+import { EditarPaciente } from "./Components/pacientes/EditarPaciente";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "/pacientes",
         element: <Pacientes />
+      },
+      {
+        path: "/editarPaciente/:id",
+        element: <EditarPaciente />
       },
       {
         path: "/clinica",

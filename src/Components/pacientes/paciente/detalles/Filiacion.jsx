@@ -4,48 +4,36 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const endpoint = "https://api.shantispawellnesslife.com/api";
+const endpoint = "http://localhost:8000/api";
 
-
-const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) => {
+const Filiacion = ({id,nombres, apellidos, ci,telefono,sexo,direccion, fecha_nacimiento}) => {
   const navigate = useNavigate();
-  const [nombre, setNombres] = useState(nombres);
-  const [apellido, setApellidos] = useState(apellidos);
-  const [telef, setTelefono] = useState(telefono);
-  const [carnet, setCi] = useState(ci);
-  const [sex, setSexo] = useState(sexo);
-  const [direc, setDireccion] = useState(direccion);
-  const [editar, setEditar] = useState(true);
 
   const guardarDatosPaciente = async () => {
-    await axios.post(`${endpoint}/paciente/${id}`, {
-      nombres: nombre,
-      apellidos: apellido,
-      telefono: telef,
-      ci: carnet,
-      sexo: sex,
-      direccion: direc,
-    })
-    .then(function () {
-      window.alert("Datos modificados correctamente");
-      navigate(0);
-    })
-    .catch(function (error) {
-      window.alert("Hubo un error guardando los datos");
-      console.log(error);
-    });
+    await axios
+      .post(`${endpoint}/paciente/${id}`, {
+        nombres: nombres,
+        apellidos: apellidos,
+        telefono: ci,
+        ci: telefono,
+        sexo: sexo,
+        direccion: direccion,
+      })
+      .then(function () {
+        window.alert("Datos modificados correctamente");
+        navigate(0);
+      })
+      .catch(function (error) {
+        window.alert("Hubo un error guardando los datos");
+        console.log(error);
+      });
     navigate(0);
-  }
+  };
 
   return (
     <div style={{ textAlign: "justify" }}>
       <h3>Datos Personales</h3>
-      <div style={{ textAlign: "left" }}>
-        <Button color="secondary" onClick={() => setEditar(!editar)}>
-          {" "}
-          {editar ? "Editar informacion" : "Cancelar Edicion"}{" "}
-        </Button>
-      </div>
+      
       <Box
         component="form"
         sx={{
@@ -55,65 +43,64 @@ const Filiacion = ({ id,  nombres, apellidos, telefono, ci, sexo, direccion }) =
         autoComplete="off"
       >
         <TextField
-          id="outlined-basic"
+          id="nombres"
           label="Nombres"
           variant="outlined"
-          disabled={editar}
-          value={nombre}
+          value={nombres}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setNombres(e.target.value)}
         />
         <TextField
-          id="outlined-basic"
+          id="apellidos"
           label="Apellidos"
           variant="outlined"
-          disabled={editar}
-          value={apellido}
+          value={apellidos}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setApellidos(e.target.value)}
         />
         <br />
         <TextField
-          id="outlined-basic"
+          id="telefono"
           label="Telefono"
           variant="outlined"
-          disabled={editar}
-          value={telef}
+          value={ci}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setTelefono(e.target.value)}
         />
         <TextField
-          id="outlined-basic"
+          id="carnet"
           label="Carnet"
           variant="outlined"
-          disabled={editar}
-          value={carnet}
+          value={telefono}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setCi(e.target.value)}
         />
         <br />
         <TextField
-          id="outlined-basic"
+          id="sexo"
           label="Sexo"
           variant="outlined"
-          disabled={editar}
-          value={sex}
+          value={sexo}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setSexo(e.target.value)}
+        />
+        <TextField
+          id="fecha_nacimiento"
+          label="fecha_nacimiento"
+          variant="outlined"
+          value={fecha_nacimiento}
+          InputLabelProps={{ shrink: true }}
         />
         <br />
         <TextField
-          id="outlined-basic"
+          id="direccion"
           label="Direccion"
           variant="outlined"
-          disabled={editar}
           value={direccion}
           InputLabelProps={{ shrink: true }}
-          onChange={(e)=>setDireccion(e.target.value)}
         />
         <br />
-        <Button variant="contained" color="warning" disabled={editar} onClick={()=>guardarDatosPaciente()}>
-          Guardar
+        <Button
+          variant="contained"
+          color="warning"
+          href={`/editarPaciente/${id}`}
+        >
+          Editar Datos Paciente
         </Button>
       </Box>
     </div>

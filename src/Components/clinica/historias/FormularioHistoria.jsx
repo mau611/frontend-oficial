@@ -13,7 +13,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const endpoint = "https://api.shantispawellnesslife.com/api";
+const endpoint = "http://localhost:8000/api";
 
 const FormularioHistoria = () => {
   const navigate = useNavigate();

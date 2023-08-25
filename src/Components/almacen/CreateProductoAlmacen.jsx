@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const referenciaAPI = "https://api.shantispawellnesslife.com/api/inventario";
+const referenciaAPI = "http://localhost:8000/api/inventario";
 
 const CreateProductoAlmacen = () => {
   const [nombre, setNombre] = useState("");

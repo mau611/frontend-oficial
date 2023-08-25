@@ -11,7 +11,7 @@ import Contabilidad from "./detalles/Contabilidad";
 import Bonos from "./detalles/Bonos";
 import Documentos from "./detalles/Documentos";
 import Historial from "./detalles/Historial";
-const endpoint = "https://api.shantispawellnesslife.com/api";
+const endpoint = "http://localhost:8000/api";
 
 const Paciente = () => {
   const { id } = useParams();
@@ -62,6 +62,7 @@ const Paciente = () => {
             telefono={paciente.telefono}
             sexo={paciente.sexo}
             direccion={paciente.direccion}
+            fecha_nacimiento={paciente.fecha_nacimiento}
           />
         </Tab>
         <Tab eventKey="contabilidad" title="Contabilidad">

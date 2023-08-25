@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Link } from "react-router-dom";
 
-const referenciaAPI = "https://api.shantispawellnesslife.com/api"
+const referenciaAPI = "http://localhost:8000/api"
 
 const ShowProductoAlmacen = () => {
 
