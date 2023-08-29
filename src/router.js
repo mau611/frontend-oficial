@@ -5,17 +5,20 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ProtectedLayout from "./Components/ProtectedLayout";
 import GuestLayout from "./Components/GuestLayout";
-import Inicio from './Components/estructura/inicio';
-import Agenda from './Components/agenda/Agenda';
-import Pacientes from "./Components/pacientes/Pacientes"
-import Clinica from "./Components/clinica/Clinica"
-import ConfigIndex from './Components/configuracion/Index';
-import Inventario from './Components/stock/Inventario';
-import Tienda from './Components/tienda/Tienda';
-import Cuentas from './Components/cuentas/Cuentas';
-import Paciente from './Components/pacientes/paciente/Paciente';
-import Estadisticas from './Components/estadisticas/Estadisticas';
+import Inicio from "./Components/estructura/inicio";
+import Agenda from "./Components/agenda/Agenda";
+import Pacientes from "./Components/pacientes/Pacientes";
+import Clinica from "./Components/clinica/Clinica";
+import ConfigIndex from "./Components/configuracion/Index";
+import Inventario from "./Components/stock/Inventario";
+import Tienda from "./Components/tienda/Tienda";
+import Cuentas from "./Components/cuentas/Cuentas";
+import Paciente from "./Components/pacientes/paciente/Paciente";
+import Estadisticas from "./Components/estadisticas/Estadisticas";
 import { EditarPaciente } from "./Components/pacientes/EditarPaciente";
+import FacturaServicioEdit from "./Components/cuentas/facturaServicio/FacturaServicioEdit";
+import AgregarDetalleProducto from "./Components/stock/detalleProducto/AgregarDetalleProducto";
+import UsoGabinete from "./Components/stock/usoGabinete/UsoGabinete";
 
 const router = createBrowserRouter([
   {
@@ -46,47 +49,59 @@ const router = createBrowserRouter([
       },
       {
         path: "/inicio",
-        element: <Inicio />
+        element: <Inicio />,
       },
       {
         path: "/agenda",
-        element: <Agenda />
+        element: <Agenda />,
       },
       {
         path: "/pacientes",
-        element: <Pacientes />
+        element: <Pacientes />,
       },
       {
         path: "/editarPaciente/:id",
-        element: <EditarPaciente />
+        element: <EditarPaciente />,
       },
       {
         path: "/clinica",
-        element: <Clinica />
+        element: <Clinica />,
       },
       {
         path: "/Configuracion",
-        element: <ConfigIndex />
+        element: <ConfigIndex />,
       },
       {
         path: "/stock",
-        element: <Inventario />
+        element: <Inventario />,
+      },
+      {
+        path: "/actualizar_producto/:id",
+        element: <AgregarDetalleProducto />,
+      },
+      {
+        path: "/actualizar_producto_uso/:id",
+        element: <UsoGabinete />,
       },
       {
         path: "/tienda",
-        element: <Tienda />
+        element: <Tienda />,
       },
       {
         path: "/cuentas",
-        element: <Cuentas />
+        element: <Cuentas />,
+      },
+      {
+        path: "/facturaEdit/:id",
+        element: <FacturaServicioEdit />,
       },
       {
         path: "/paciente/:id",
-        element: <Paciente />
+        element: <Paciente />,
       },
       {
         path: "/estadisticas",
-        element: <Estadisticas />
+        element: <Estadisticas />,
       },
     ],
   },

@@ -14,25 +14,23 @@ export const EditarPaciente = () => {
   const [ci, setCi] = useState("");
   const [sexo, setSexo] = useState("");
   const [direccion, setDireccion] = useState("");
-  const {id} = useParams();
+  const { id } = useParams();
   const endpoint = "http://localhost:8000/api";
   const navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
     const getPacienteById = async () => {
-      const response = await axios.get(
-        `${endpoint}/paciente/${id}`
-      );
-      setNombres(response.data.nombres)
-      setApellidos(response.data.apellidos)
-      setTelefono(response.data.telefono)
-      setFechaNacimiento(response.data.fecha_nacimiento)
-      setCi(response.data.ci)
-      setSexo(response.data.sexo)
-      setDireccion(response.data.direccion)
-    }
-    getPacienteById()
-  },[])
+      const response = await axios.get(`${endpoint}/paciente/${id}`);
+      setNombres(response.data.nombres);
+      setApellidos(response.data.apellidos);
+      setTelefono(response.data.telefono);
+      setFechaNacimiento(response.data.fecha_nacimiento);
+      setCi(response.data.ci);
+      setSexo(response.data.sexo);
+      setDireccion(response.data.direccion);
+    };
+    getPacienteById();
+  }, []);
 
   const guardarDatosPaciente = async () => {
     await axios
@@ -43,7 +41,7 @@ export const EditarPaciente = () => {
         fecha_nacimiento: fecha_nacimiento,
         ci: ci,
         sexo: sexo,
-        direccion: direccion
+        direccion: direccion,
       })
       .then(function () {
         window.alert("Datos modificados correctamente");
@@ -71,7 +69,7 @@ export const EditarPaciente = () => {
           label="Nombres"
           variant="outlined"
           value={nombres}
-          onChange={(e)=>setNombres(e.target.value)}
+          onChange={(e) => setNombres(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <TextField
@@ -79,7 +77,7 @@ export const EditarPaciente = () => {
           label="Apellidos"
           variant="outlined"
           value={apellidos}
-          onChange={(e)=>setApellidos(e.target.value)}
+          onChange={(e) => setApellidos(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <br />
@@ -88,7 +86,7 @@ export const EditarPaciente = () => {
           label="Telefono"
           variant="outlined"
           value={telefono}
-          onChange={(e)=>setTelefono(e.target.value)}
+          onChange={(e) => setTelefono(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <br />
@@ -97,7 +95,7 @@ export const EditarPaciente = () => {
           label="Telefono"
           variant="outlined"
           value={fecha_nacimiento}
-          onChange={(e)=>setFechaNacimiento(e.target.value)}
+          onChange={(e) => setFechaNacimiento(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <TextField
@@ -105,7 +103,7 @@ export const EditarPaciente = () => {
           label="Carnet"
           variant="outlined"
           value={ci}
-          onChange={(e)=>setCi(e.target.value)}
+          onChange={(e) => setCi(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <br />
@@ -114,7 +112,7 @@ export const EditarPaciente = () => {
           label="Sexo"
           variant="outlined"
           value={sexo}
-          onChange={(e)=>setSexo(e.target.value)}
+          onChange={(e) => setSexo(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <br />
@@ -123,7 +121,7 @@ export const EditarPaciente = () => {
           label="Direccion"
           variant="outlined"
           value={direccion}
-          onChange={(e)=>setDireccion(e.target.value)}
+          onChange={(e) => setDireccion(e.target.value)}
           InputLabelProps={{ shrink: true }}
         />
         <br />

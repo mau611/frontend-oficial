@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, esES } from '@mui/x-data-grid';
+import { DataGrid, esES } from "@mui/x-data-grid";
 import NavBar from "../estructura/NavBar";
 import axios from "axios";
 
@@ -30,21 +30,21 @@ export const Pacientes = () => {
     <NavBar>
       <h1>Lista de Pacientes</h1>
       <br />
-      <div style={{ height: 600, width: '100%' }}>
-      <DataGrid
-        onRowClick={(e)=>window.open(`/paciente/${e.row.id}`,"_blank")}
-        rows={pacientes}
-        columns={columnas}
-        localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-      />
-    </div>
+      <div style={{ height: 600, width: "100%" }}>
+        <DataGrid
+          onRowClick={(e) => window.open(`/paciente/${e.row.id}`, "_blank")}
+          rows={pacientes}
+          columns={columnas}
+          localeText={esES.components.MuiDataGrid.defaultProps.localeText}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+        />
+      </div>
     </NavBar>
   );
 };

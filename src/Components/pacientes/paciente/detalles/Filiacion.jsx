@@ -6,7 +6,16 @@ import { useNavigate } from "react-router-dom";
 
 const endpoint = "http://localhost:8000/api";
 
-const Filiacion = ({id,nombres, apellidos, ci,telefono,sexo,direccion, fecha_nacimiento}) => {
+const Filiacion = ({
+  id,
+  nombres,
+  apellidos,
+  ci,
+  telefono,
+  sexo,
+  direccion,
+  fecha_nacimiento,
+}) => {
   const navigate = useNavigate();
 
   const guardarDatosPaciente = async () => {
@@ -33,7 +42,7 @@ const Filiacion = ({id,nombres, apellidos, ci,telefono,sexo,direccion, fecha_nac
   return (
     <div style={{ textAlign: "justify" }}>
       <h3>Datos Personales</h3>
-      
+
       <Box
         component="form"
         sx={{

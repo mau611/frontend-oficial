@@ -43,8 +43,6 @@ const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
   const [dxId, setDxId] = React.useState("");
   const navigate = useNavigate();
 
-  
-
   const handleClose = () => {
     setOpenDx(false);
     setOpenTx(false);
@@ -113,9 +111,7 @@ const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
     <div style={{ textAlign: "justify" }}>
       <h4>Profesionales a cargo</h4>
       <div>
-        <ul>
-          {console.log(profesionales)}
-        </ul>
+        <ul>{console.log(profesionales)}</ul>
       </div>
       <h4>Diagnostico y tratamientos del paciente</h4>
       <div>

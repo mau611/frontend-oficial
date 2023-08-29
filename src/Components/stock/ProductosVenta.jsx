@@ -17,9 +17,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { Fragment, useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 
 const endpoint = "http://localhost:8000/api";
 
@@ -156,6 +156,7 @@ const ProductosVenta = () => {
                 <TableCell>ID</TableCell>
                 <TableCell>Producto</TableCell>
                 <TableCell>Descripcion</TableCell>
+                <TableCell>Registrar Compra</TableCell>
                 <TableCell>Proveedor</TableCell>
                 <TableCell>Fecha ingreso</TableCell>
                 <TableCell>Precio Compra</TableCell>
@@ -177,6 +178,11 @@ const ProductosVenta = () => {
                   </TableCell>
                   <TableCell align="">{row.Nombre}</TableCell>
                   <TableCell align="">{row.descripcion}</TableCell>
+                  <TableCell align="">
+                    <Link to={`/actualizar_producto/${row.id}`}>
+                      <AddToPhotosIcon />
+                    </Link>
+                  </TableCell>
                   <TableCell align="">{row.proveedor.nombre}</TableCell>
                   <TableCell>
                     {row.ingresos.map((ingreso) => (
@@ -211,11 +217,11 @@ const ProductosVenta = () => {
                   <TableCell>
                     {row.ingresos.map((ingreso) => (
                       <p>
-                        <IconButton aria-label="editar" onClick={handleClickOpenVenta}>
+                        <IconButton
+                          aria-label="editar"
+                          onClick={handleClickOpenVenta}
+                        >
                           <EditIcon fontSize="small" color="secondary" />
-                        </IconButton>
-                        <IconButton aria-label="vender" onClick={handleClickOpenVenta}>
-                          <LocalAtmIcon fontSize="small" color="success" />
                         </IconButton>
                       </p>
                     ))}
@@ -226,14 +232,13 @@ const ProductosVenta = () => {
           </Table>
         </TableContainer>
       </div>
+      <br />
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
           Agregar Producto
         </Button>
-        &nbsp;&nbsp;&nbsp;
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Actualizar Producto
-        </Button>
+      </div>
+      <div>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Creacion de producto</DialogTitle>
           <DialogContent>
@@ -328,6 +333,7 @@ const ProductosVenta = () => {
               onChange={(e) => handleChange(e.target.value, "factura")}
             />
             <TextField
+              InputLabelProps={{ shrink: true }}
               value={state.vencimiento}
               autoFocus
               margin="dense"
@@ -345,26 +351,26 @@ const ProductosVenta = () => {
           </DialogActions>
         </Dialog>
       </div>
-	  <div>
-	  <Dialog open={openVenta} onClose={handleClose}>
-        <DialogTitle>Vender Producto</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Seleccionar Producto"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseVenta}>Cancelar</Button>
-          <Button onClick={handleCloseVenta}>Vender</Button>
-        </DialogActions>
-      </Dialog>
-	  </div>
+      <div>
+        <Dialog open={openVenta} onClose={handleClose}>
+          <DialogTitle>Vender Producto</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Seleccionar Producto"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseVenta}>Cancelar</Button>
+            <Button onClick={handleCloseVenta}>Vender</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </Fragment>
   );
 };

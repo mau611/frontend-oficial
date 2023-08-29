@@ -22,7 +22,7 @@ const Licenciados = () => {
     nombre: "",
   });
   const handleChange = (value, name) => {
-    console.log(value)
+    console.log(value);
     setState((prev) => {
       return {
         ...prev,
@@ -55,12 +55,9 @@ const Licenciados = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(
-      `${endpoint}/profesional`,
-      {
-        nombre: state.nombre,
-      },
-    );
+    await axios.post(`${endpoint}/profesional`, {
+      nombre: state.nombre,
+    });
     navigate(0);
   };
 
@@ -91,7 +88,6 @@ const Licenciados = () => {
               variant="standard"
               onChange={(e) => handleChange(e.target.value, "nombre")}
             />
-            
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>

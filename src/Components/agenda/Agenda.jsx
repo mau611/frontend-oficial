@@ -119,7 +119,7 @@ const Agenda = () => {
   const [selectEventId, setSelectEventId] = useState(0);
   const [profesionales, setProfesionales] = useState([]);
   const [profesionalId, setProfesionalId] = useState("");
-  
+
   //variables de bonos
   const [nombreBono, setNombreBono] = useState("");
   const [sesionesBono, setSesionesBono] = useState(0);
@@ -415,7 +415,7 @@ const Agenda = () => {
     const pi = "" + profesionalId;
     try {
       await axios.post(`${endpoint}/consulta`, {
-        title: ""+detalleTratamiento,
+        title: "" + detalleTratamiento,
         start: "" + new Date(detalleEvento.start).toISOString(),
         end: "" + new Date(detalleEvento.end).toISOString(),
         estado: estadoCita,

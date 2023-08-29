@@ -49,7 +49,7 @@ const Formulario = () => {
     if (ingresoP.length > 1) {
       let valor = ingresoP.split(" ")[0];
       productos.push(ingresoProductos.find((element) => element.id == valor));
-      repeticiones.push(parseInt(valor))
+      repeticiones.push(parseInt(valor));
       setIngresoP("");
       var aux = 0;
       productos.map((producto) => (aux = aux + producto.PrecioVenta));
@@ -61,13 +61,13 @@ const Formulario = () => {
     setProductos([]);
     setTotal(0);
     setObservaciones("");
-    setDetallesPago("")
+    setDetallesPago("");
     setEstadoPago("");
     setFormaPago("");
     setPaciente("");
     setLicenciado("");
     setIngresoP([]);
-    setRepeticiones([])
+    setRepeticiones([]);
   };
 
   const realizarVenta = async () => {
@@ -84,11 +84,11 @@ const Formulario = () => {
     await axios.post(`${endpoint}/venta`, {
       total: total,
       estado: estadoPago,
-      tipo_pago:formaPago,
-      detalles_pago:detallesPago,
+      tipo_pago: formaPago,
+      detalles_pago: detallesPago,
       observaciones: observaciones,
-      paciente_id:paciente,
-      profesional_id:licenciado,
+      paciente_id: paciente,
+      profesional_id: licenciado,
       productos: repeticiones,
     });
     navigate(0);

@@ -24,7 +24,7 @@ const CrearGabinetes = () => {
     color: "",
   });
   const handleChange = (value, name) => {
-    console.log(value)
+    console.log(value);
     setState((prev) => {
       return {
         ...prev,
@@ -58,13 +58,10 @@ const CrearGabinetes = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(
-      `${endpoint}/consultorio`,
-      {
-        nombre: state.nombre,
-        color: state.color,
-      },
-    );
+    await axios.post(`${endpoint}/consultorio`, {
+      nombre: state.nombre,
+      color: state.color,
+    });
     navigate(0);
   };
 
@@ -105,7 +102,6 @@ const CrearGabinetes = () => {
               variant="standard"
               onChange={(e) => handleChange(e.target.value, "color")}
             />
-            
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>

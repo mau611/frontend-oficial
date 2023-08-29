@@ -14,8 +14,9 @@ const ImportarDatos = () => {
     const formData = new FormData();
     formData.append("name", "archivo");
     formData.append("file", archivo);
-    await axios.post(`${endpoint}/importar`, formData)
-    .catch((err) => alert("File Upload Error"));
+    await axios
+      .post(`${endpoint}/importar`, formData)
+      .catch((err) => alert("File Upload Error"));
     navigate(0);
   };
 
@@ -33,7 +34,7 @@ const ImportarDatos = () => {
             onChange={(e) => setArchivo(e.target.files[0])}
           />
         </Form.Group>
-        <Button variant="success" type="submit" onClick={()=>enviarArchivo()}>
+        <Button variant="success" type="submit" onClick={() => enviarArchivo()}>
           Importar
         </Button>
       </form>

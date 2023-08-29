@@ -66,7 +66,7 @@ const TablaProductos = () => {
         <TableFooter>
           <br />
           <div>
-          {"Total ventas: " +
+            {"Total ventas: " +
               detalles[0] +
               " Bs" +
               "  - Efectivo: " +
@@ -77,7 +77,7 @@ const TablaProductos = () => {
               " Bs" +
               "  - Tarjetas: " +
               detalles[3] +
-              " Bs" }
+              " Bs"}
           </div>
         </TableFooter>
       </TableContainer>

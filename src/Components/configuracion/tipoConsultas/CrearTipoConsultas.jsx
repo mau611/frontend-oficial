@@ -58,13 +58,10 @@ const CrearTratamientos = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(
-      `${endpoint}/tipoConsulta`,
-      {
-        nombre: state.nombre,
-        color: state.color,
-      },
-    );
+    await axios.post(`${endpoint}/tipoConsulta`, {
+      nombre: state.nombre,
+      color: state.color,
+    });
     navigate(0);
   };
 

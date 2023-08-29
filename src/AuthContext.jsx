@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import axios from "./axios";
 
-
 const AuthContent = createContext({
   user: null,
   setUser: () => {},

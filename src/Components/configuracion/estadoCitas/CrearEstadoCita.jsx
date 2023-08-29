@@ -22,7 +22,7 @@ const CrearEstadoCita = () => {
     estado: "",
   });
   const handleChange = (value, name) => {
-    console.log(value)
+    console.log(value);
     setState((prev) => {
       return {
         ...prev,
@@ -55,12 +55,9 @@ const CrearEstadoCita = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(
-      `${endpoint}/estadoCita`,
-      {
-        estado: state.estado,
-      },
-    );
+    await axios.post(`${endpoint}/estadoCita`, {
+      estado: state.estado,
+    });
     navigate(0);
   };
 
@@ -91,7 +88,6 @@ const CrearEstadoCita = () => {
               variant="standard"
               onChange={(e) => handleChange(e.target.value, "estado")}
             />
-            
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
