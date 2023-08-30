@@ -83,12 +83,14 @@ const TablaPacientes = () => {
               "  - Transferencias: " +
               detalles[2] +
               " Bs" +
-              "  - Tarjetas: " +
+              "  - Pagos Qr: " +
               detalles[3] +
               " Bs" +
-              "  - Bonos: " +
+              "  - Tarjeta de Debito: " +
               detalles[4] +
-              " Bs"}
+              " Bs" +
+              " - Tarjeta de Credito: " +
+              detalles[5]}
           </div>
         </TableFooter>
       </TableContainer>

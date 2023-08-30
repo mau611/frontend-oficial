@@ -124,6 +124,7 @@ export default function NavBar({ children, titulo }) {
   const [ciError, setCiError] = React.useState(null);
   const [sexoError, setSexoError] = React.useState(null);
   const [direccionError, setDireccionError] = React.useState(null);
+  const fecha = new Date().toISOString().slice(0, 10);
 
   const [state, setState] = React.useState({
     nombres: "",
@@ -308,7 +309,7 @@ export default function NavBar({ children, titulo }) {
         <Divider />
         <List>
           {[
-            <Link to="/agenda">Agenda</Link>,
+            <Link to={`/agenda/${fecha}`}>Agenda</Link>,
             "Agregar Paciente",
             <Link to="/pacientes">Pacientes</Link>,
             <Link to="/clinica">Clinica</Link>,
@@ -338,7 +339,7 @@ export default function NavBar({ children, titulo }) {
                 >
                   {index === 0 ? (
                     <Tooltip title="Agenda" placement="right">
-                      <Link to="/agenda">
+                      <Link to={`/agenda/${fecha}`}>
                         <TodayIcon />
                       </Link>
                     </Tooltip>

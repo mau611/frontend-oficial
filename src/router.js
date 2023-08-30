@@ -19,6 +19,7 @@ import { EditarPaciente } from "./Components/pacientes/EditarPaciente";
 import FacturaServicioEdit from "./Components/cuentas/facturaServicio/FacturaServicioEdit";
 import AgregarDetalleProducto from "./Components/stock/detalleProducto/AgregarDetalleProducto";
 import UsoGabinete from "./Components/stock/usoGabinete/UsoGabinete";
+import AgendaControlada from "./Components/agenda/AgendaControlada";
 
 const router = createBrowserRouter([
   {
@@ -52,8 +53,9 @@ const router = createBrowserRouter([
         element: <Inicio />,
       },
       {
-        path: "/agenda",
-        element: <Agenda />,
+        path: "/agenda/:fecha",
+        //element: <Agenda />,
+        element: <AgendaControlada />,
       },
       {
         path: "/pacientes",

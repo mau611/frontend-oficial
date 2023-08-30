@@ -4,16 +4,20 @@ import { Link } from "react-router-dom";
 import logo from "./../../shanti_transparencia.png";
 
 const inicio = () => {
+  const fecha = new Date().toISOString().slice(0, 10);
   return (
     <div className="jumbotron text-center">
       <div className="container">
-        <div className="flex flex-col items-center justify-center" >
+        <div className="flex flex-col items-center justify-center">
           <img src={logo} className="rounded" width={300} alt="logo" />
         </div>
         <br />
         <div className="row">
           <div className="col-lg-3">
-            <Link to="/agenda" className="btn btn-outline-light btn-lg">
+            <Link
+              to={`/agenda/${fecha}`}
+              className="btn btn-outline-light btn-lg"
+            >
               Agenda
             </Link>
           </div>

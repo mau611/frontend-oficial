@@ -38,7 +38,6 @@ import {
 } from "@mui/material";
 import NavBar from "../estructura/NavBar";
 import { useNavigate } from "react-router-dom";
-import DatosPaciente from "./ComponentesPaciente/DatosPaciente";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import { CloseButton } from "react-bootstrap";
 require("globalize/lib/cultures/globalize.culture.es");
