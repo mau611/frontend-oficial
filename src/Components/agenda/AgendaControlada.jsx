@@ -47,6 +47,16 @@ import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
+const dias = [
+  "Lunes",
+  "Martes",
+  "Miercoles",
+  "Jueves",
+  "Viernes",
+  "Sabado",
+  "Domingo",
+];
+
 const endpoint = "http://localhost:8000/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -344,9 +354,7 @@ const AgendaControlada = () => {
     setServicios(response.data);
   };
   const getEventosBD = async () => {
-    const response = await axios.get(`${endpoint}/consultas_por_dia`, {
-      fecha: fecha,
-    });
+    const response = await axios.get(`${endpoint}/consultas_por_dia/${fecha}`);
     response.data.map((ev) => {
       let nombre = setearNombreEvento(ev);
       setEvents((prev) => [
@@ -505,13 +513,23 @@ const AgendaControlada = () => {
         </Grid>
         <Grid item xs="auto" sm="9" md="9">
           <Fragment>
+            <Grid container>
+              <Grid item xs="auto" sm="4" md="4"></Grid>
+              <Grid item xs="auto" sm="4" md="4" className="text-center">
+                <h1>{dias[new Date().getDay() - 1]}</h1>
+              </Grid>
+              <Grid item xs="auto" sm="4" md="4"></Grid>
+            </Grid>
             <DragAndDropCalendar
               views={{
                 month: false,
                 week: false,
                 day: true,
                 agenda: true,
+                action: false,
+                navigate: false,
               }}
+              toolbar={false}
               dayLayoutAlgorithm={"no-overlap"}
               min={new Date(1972, 0, 1, 6, 0, 0, 0)}
               max={new Date(0, 0, 1, 20, 30, 0, 0)}

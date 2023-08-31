@@ -4,7 +4,13 @@ import { Link } from "react-router-dom";
 import logo from "./../../shanti_transparencia.png";
 
 const inicio = () => {
-  const fecha = new Date().toISOString().slice(0, 10);
+  const valorFecha = new Date();
+  const fecha =
+    valorFecha.getFullYear() +
+    "-" +
+    (parseInt(valorFecha.getMonth()) + 1) +
+    "-" +
+    valorFecha.getDate();
   return (
     <div className="jumbotron text-center">
       <div className="container">

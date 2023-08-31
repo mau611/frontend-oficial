@@ -124,7 +124,13 @@ export default function NavBar({ children, titulo }) {
   const [ciError, setCiError] = React.useState(null);
   const [sexoError, setSexoError] = React.useState(null);
   const [direccionError, setDireccionError] = React.useState(null);
-  const fecha = new Date().toISOString().slice(0, 10);
+  const valorFecha = new Date();
+  const fecha =
+    valorFecha.getFullYear() +
+    "-" +
+    (parseInt(valorFecha.getMonth()) + 1) +
+    "-" +
+    valorFecha.getDate();
 
   const [state, setState] = React.useState({
     nombres: "",
