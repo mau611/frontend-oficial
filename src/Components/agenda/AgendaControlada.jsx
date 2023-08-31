@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TodayIcon from "@mui/icons-material/Today";
 
 import React, {
   Fragment,
@@ -39,7 +40,7 @@ import {
   useTheme,
 } from "@mui/material";
 import NavBar from "../estructura/NavBar";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import { CloseButton } from "react-bootstrap";
 import dayjs from "dayjs";
@@ -400,7 +401,6 @@ const AgendaControlada = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
-    console.log(calEvent);
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
@@ -514,7 +514,24 @@ const AgendaControlada = () => {
         <Grid item xs="auto" sm="9" md="9">
           <Fragment>
             <Grid container>
-              <Grid item xs="auto" sm="4" md="4"></Grid>
+              <Grid item xs="auto" sm="4" md="4">
+                <Button
+                  variant="outlined"
+                  startIcon={<TodayIcon />}
+                  sx={{ color: "#155E30", borderColor: "#155E30" }}
+                  onClick={() =>
+                    (window.location = `/agenda/${
+                      new Date().getFullYear() +
+                      "-" +
+                      (new Date().getMonth() + 1) +
+                      "-" +
+                      new Date().getDate()
+                    }`)
+                  }
+                >
+                  Hoy
+                </Button>
+              </Grid>
               <Grid item xs="auto" sm="4" md="4" className="text-center">
                 <h1>{dias[new Date(fecha).getDay()]}</h1>
               </Grid>
@@ -602,7 +619,15 @@ const AgendaControlada = () => {
                   )}
                 />
                 {pacienteError && (
-                  <p className="text-sm text-red-600">{pacienteError}</p>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: "1.25rem",
+                      color: "#DC2626",
+                    }}
+                  >
+                    {pacienteError}
+                  </p>
                 )}
                 <br />
                 <Autocomplete
@@ -627,7 +652,15 @@ const AgendaControlada = () => {
                   )}
                 />
                 {tipoConsultaError && (
-                  <p className="text-sm text-red-600">{tipoConsultaError}</p>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: "1.25rem",
+                      color: "#DC2626",
+                    }}
+                  >
+                    {tipoConsultaError}
+                  </p>
                 )}
                 <br />
                 <TextField
@@ -641,7 +674,15 @@ const AgendaControlada = () => {
                   fullWidth
                 />
                 {detallesError && (
-                  <p className="text-sm text-red-600">{detallesError}</p>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: "1.25rem",
+                      color: "#DC2626",
+                    }}
+                  >
+                    {detallesError}
+                  </p>
                 )}
                 <br />
                 <br />
@@ -667,7 +708,15 @@ const AgendaControlada = () => {
                   )}
                 />
                 {estadoCitaError && (
-                  <p className="text-sm text-red-600">{estadoCitaError}</p>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: "1.25rem",
+                      color: "#DC2626",
+                    }}
+                  >
+                    {estadoCitaError}
+                  </p>
                 )}
                 <br />
                 <Autocomplete
@@ -692,7 +741,15 @@ const AgendaControlada = () => {
                   )}
                 />
                 {agendadoPorError && (
-                  <p className="text-sm text-red-600">{agendadoPorError}</p>
+                  <p
+                    style={{
+                      fontSize: "0.875rem",
+                      lineHeight: "1.25rem",
+                      color: "#DC2626",
+                    }}
+                  >
+                    {agendadoPorError}
+                  </p>
                 )}
               </DialogContent>
               <DialogActions>
@@ -745,116 +802,7 @@ const AgendaControlada = () => {
                 <DialogContent>
                   <Accordion style={{ width: "500px" }}>
                     <Accordion.Item eventKey="0">
-                      <Accordion.Header>Facturas</Accordion.Header>
-                      <Accordion.Body>
-                        <Table striped bordered hover size="sm">
-                          <thead>
-                            <tr>
-                              <th>Factura No</th>
-                              <th>Total</th>
-                              <th>Estado pago</th>
-                              <th>Detalles</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {auxFacturas.map((factura) => (
-                              <tr>
-                                <td>{factura.numero}</td>
-                                <td>{factura.total} Bs</td>
-                                <td>{factura.estado_pago}</td>
-                                <td>{factura.detalles_pago}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="1">
-                      <Accordion.Header>Bonos</Accordion.Header>
-                      <Accordion.Body>
-                        <br />
-                        <div>
-                          {auxPaciente.bonos == undefined ? (
-                            "nada"
-                          ) : (
-                            <Container>
-                              Sesiones paciente:
-                              {auxPaciente.bonos.map((bono) => (
-                                <Row>
-                                  <Col>
-                                    {bono.nombre} x{bono.sesiones}
-                                  </Col>
-                                  <Col>Restantes: {bono.restantes}</Col>
-                                  {bono.restantes > 0 ? (
-                                    <Col>
-                                      <ButtonB
-                                        style={{ width: "70%" }}
-                                        size="sm"
-                                        variant="link"
-                                        onClick={() => consumirBono(bono.id)}
-                                      >
-                                        Consumir
-                                      </ButtonB>
-                                    </Col>
-                                  ) : (
-                                    <Col>
-                                      <ButtonB
-                                        style={{ width: "100%" }}
-                                        size="sm"
-                                        variant="outline-secondary"
-                                        disabled
-                                      >
-                                        Bono consumido
-                                      </ButtonB>
-                                    </Col>
-                                  )}
-                                  <hr />
-                                </Row>
-                              ))}
-                            </Container>
-                          )}
-                          <br />
-                        </div>
-                        <div>
-                          <TextField
-                            id="outlined-basic"
-                            label="Nombre"
-                            variant="outlined"
-                            style={{ width: 200 }}
-                            value={nombreBono}
-                            onChange={(e) =>
-                              setValoresBono(e.target.value, "nombreBono")
-                            }
-                          />
-                          <TextField
-                            id="outlined-basic"
-                            label="Sesiones"
-                            type={"number"}
-                            variant="outlined"
-                            style={{ width: 110 }}
-                            value={sesionesBono}
-                            onChange={(e) =>
-                              setValoresBono(e.target.value, "sesionesBono")
-                            }
-                          />
-                          <TextField
-                            id="outlined-basic"
-                            label="Monto"
-                            variant="outlined"
-                            style={{ width: 100 }}
-                            value={costoBono}
-                            onChange={(e) =>
-                              setValoresBono(e.target.value, "costoBono")
-                            }
-                          />
-                          <IconButton aria-label="add to favorites">
-                            <PriceCheckIcon onClick={crearBono} />
-                          </IconButton>
-                        </div>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="2">
-                      <Accordion.Header>Facturar</Accordion.Header>
+                      <Accordion.Header>Cobrar Servicio</Accordion.Header>
                       <Accordion.Body>
                         <br />
                         <FormControl
@@ -950,6 +898,127 @@ const AgendaControlada = () => {
                           </div>
                         </FormControl>
                       </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="1">
+                      <Accordion.Header>Bonos</Accordion.Header>
+                      <Accordion.Body>
+                        <br />
+                        <div>
+                          {auxPaciente.bonos == undefined ? (
+                            "nada"
+                          ) : (
+                            <Container>
+                              Sesiones paciente:
+                              {auxPaciente.bonos.map((bono) => (
+                                <Row>
+                                  <Col>
+                                    {bono.nombre} x{bono.sesiones}
+                                  </Col>
+                                  <Col>Restantes: {bono.restantes}</Col>
+                                  {bono.restantes > 0 ? (
+                                    <Col>
+                                      <ButtonB
+                                        style={{ width: "70%" }}
+                                        size="sm"
+                                        variant="link"
+                                        onClick={() => consumirBono(bono.id)}
+                                      >
+                                        Consumir
+                                      </ButtonB>
+                                    </Col>
+                                  ) : (
+                                    <Col>
+                                      <ButtonB
+                                        style={{ width: "100%" }}
+                                        size="sm"
+                                        variant="outline-secondary"
+                                        disabled
+                                      >
+                                        Bono consumido
+                                      </ButtonB>
+                                    </Col>
+                                  )}
+                                  <hr />
+                                </Row>
+                              ))}
+                            </Container>
+                          )}
+                          <br />
+                        </div>
+                        <div>
+                          <Select
+                            labelId="Nombre"
+                            id="nombre"
+                            variant="outlined"
+                            style={{ width: 200 }}
+                            value={nombreBono}
+                            label="Nombre"
+                            onChange={(e) =>
+                              setValoresBono(e.target.value, "nombreBono")
+                            }
+                          >
+                            <MenuItem value={"Paquete post quirurgico"}>
+                              Paquete post quirurgico
+                            </MenuItem>
+                            <MenuItem value={"Sesiones"}>Sesiones</MenuItem>
+                            <MenuItem value={"Pago adelantado"}>
+                              Pago adelantado
+                            </MenuItem>
+                          </Select>
+                          <TextField
+                            id="outlined-basic"
+                            label="Sesiones"
+                            type={"number"}
+                            variant="outlined"
+                            style={{ width: 110 }}
+                            value={sesionesBono}
+                            onChange={(e) =>
+                              setValoresBono(e.target.value, "sesionesBono")
+                            }
+                          />
+                          <TextField
+                            id="outlined-basic"
+                            label="Monto"
+                            variant="outlined"
+                            style={{ width: 100 }}
+                            value={costoBono}
+                            onChange={(e) =>
+                              setValoresBono(e.target.value, "costoBono")
+                            }
+                          />
+                          <IconButton aria-label="add to favorites">
+                            <PriceCheckIcon onClick={crearBono} />
+                          </IconButton>
+                        </div>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                      <Accordion.Header>Cobros de la cita</Accordion.Header>
+                      <Accordion.Body>
+                        <Table striped bordered hover size="sm">
+                          <thead>
+                            <tr>
+                              <th>Factura No</th>
+                              <th>Total</th>
+                              <th>Estado pago</th>
+                              <th>Detalles</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {auxFacturas.map((factura) => (
+                              <tr>
+                                <td>{factura.numero}</td>
+                                <td>{factura.total} Bs</td>
+                                <td>{factura.estado_pago}</td>
+                                <td>{factura.detalles_pago}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="3">
+                      <Accordion.Header>Historial de pagos</Accordion.Header>
                     </Accordion.Item>
                   </Accordion>
                 </DialogContent>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import Table from "react-bootstrap/Table";
 
@@ -8,7 +7,7 @@ const Contabilidad = ({ citas }) => {
       <h4>Facturas pagadas</h4>
       <br />
       <Table striped bordered hover>
-        <thead>
+        <thead style={{ backgroundColor: "#155E30", color: "white" }}>
           <tr>
             <th>Fecha</th>
             <th>Numero de factura</th>
@@ -37,7 +36,7 @@ const Contabilidad = ({ citas }) => {
       <h4>Pendientes de pago</h4>
       <br />
       <Table striped bordered hover>
-        <thead>
+        <thead style={{ backgroundColor: "#155E30", color: "white" }}>
           <tr>
             <th>Fecha</th>
             <th>Numero de factura</th>

@@ -315,7 +315,19 @@ export default function NavBar({ children, titulo }) {
         <Divider />
         <List>
           {[
-            <Link to={`/agenda/${fecha}`}>Agenda</Link>,
+            <Link
+              onClick={() =>
+                (window.location = `/agenda/${
+                  new Date().getFullYear() +
+                  "-" +
+                  (new Date().getMonth() + 1) +
+                  "-" +
+                  new Date().getDate()
+                }`)
+              }
+            >
+              Agenda
+            </Link>,
             "Agregar Paciente",
             <Link to="/pacientes">Pacientes</Link>,
             <Link to="/clinica">Clinica</Link>,
@@ -345,7 +357,17 @@ export default function NavBar({ children, titulo }) {
                 >
                   {index === 0 ? (
                     <Tooltip title="Agenda" placement="right">
-                      <Link to={`/agenda/${fecha}`}>
+                      <Link
+                        onClick={() =>
+                          (window.location = `/agenda/${
+                            new Date().getFullYear() +
+                            "-" +
+                            (new Date().getMonth() + 1) +
+                            "-" +
+                            new Date().getDate()
+                          }`)
+                        }
+                      >
                         <TodayIcon />
                       </Link>
                     </Tooltip>
@@ -456,6 +478,8 @@ export default function NavBar({ children, titulo }) {
             </DialogTitle>
             <DialogContent>
               <TextField
+                helperText={nombresError}
+                error={nombresError ? true : false}
                 autoFocus
                 margin="dense"
                 id="nombres"
@@ -467,10 +491,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "nombres")}
               />
-              {nombresError && (
-                <p className="text-sm text-red-600">{nombresError}</p>
-              )}
               <TextField
+                helperText={apellidosError}
+                error={apellidosError ? true : false}
                 autoFocus
                 margin="dense"
                 id="apellidos"
@@ -482,10 +505,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "apellidos")}
               />
-              {apellidosError && (
-                <p className="text-sm text-red-600">{apellidosError}</p>
-              )}
               <TextField
+                helperText={telefonoError}
+                error={telefonoError ? true : false}
                 autoFocus
                 margin="dense"
                 id="telefono"
@@ -497,10 +519,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "telefono")}
               />
-              {telefonoError && (
-                <p className="text-sm text-red-600">{telefonoError}</p>
-              )}
               <TextField
+                helperText={nacimientoError}
+                error={nacimientoError ? true : false}
                 label="fecha de nacimiento"
                 autoFocus
                 margin="dense"
@@ -520,6 +541,8 @@ export default function NavBar({ children, titulo }) {
                 <p className="text-sm text-red-600">{nacimientoError}</p>
               )}
               <TextField
+                helperText={ciError}
+                error={ciError ? true : false}
                 autoFocus
                 margin="dense"
                 id="ci"
@@ -531,8 +554,9 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "ci")}
               />
-              {ciError && <p className="text-sm text-red-600">{ciError}</p>}
               <TextField
+                helperText={sexoError}
+                error={sexoError ? true : false}
                 id="sexo"
                 type={"select"}
                 fullWidth
@@ -546,6 +570,8 @@ export default function NavBar({ children, titulo }) {
               </TextField>
               {sexoError && <p className="text-sm text-red-600">{sexoError}</p>}
               <TextField
+                helperText={direccionError}
+                error={direccionError ? true : false}
                 autoFocus
                 margin="dense"
                 id="direccion"
@@ -557,9 +583,6 @@ export default function NavBar({ children, titulo }) {
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "direccion")}
               />
-              {direccionError && (
-                <p className="text-sm text-red-600">{direccionError}</p>
-              )}
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseModal}>Cancelar</Button>

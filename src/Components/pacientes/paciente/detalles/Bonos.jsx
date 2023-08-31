@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React from "react";
+import shantiLogo from "./../../../../shanti card.png";
 
 const Bonos = ({ bonos }) => {
   const theme = useTheme();
-  console.log(bonos)
+  console.log(bonos);
   return (
     <div>
       <h3>Bonos</h3>
@@ -24,15 +25,18 @@ const Bonos = ({ bonos }) => {
             <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
-                  sx={{ height: 140 }}
-                  image="https://www.narzissenfest.at/en/wp-content/uploads/2013/10/ticket.png"
-                  title="imagen bono" />
+                  sx={{ height: 150 }}
+                  image={shantiLogo}
+                  title="imagen bono"
+                />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
                     {bono.nombre}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Usos: {bono.sesiones - bono.restantes} - Restantes: {bono.restantes}<br />
+                    Usos: {bono.sesiones - bono.restantes} - Restantes:{" "}
+                    {bono.restantes}
+                    <br />
                     Precio: {bono.precio} Bs.
                   </Typography>
                 </CardContent>
