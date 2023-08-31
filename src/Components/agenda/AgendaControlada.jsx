@@ -48,13 +48,13 @@ require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const dias = [
+  "Domingo",
   "Lunes",
   "Martes",
   "Miercoles",
   "Jueves",
   "Viernes",
   "Sabado",
-  "Domingo",
 ];
 
 const endpoint = "http://localhost:8000/api";
@@ -516,7 +516,7 @@ const AgendaControlada = () => {
             <Grid container>
               <Grid item xs="auto" sm="4" md="4"></Grid>
               <Grid item xs="auto" sm="4" md="4" className="text-center">
-                <h1>{dias[new Date().getDay() - 1]}</h1>
+                <h1>{dias[new Date(fecha).getDay()]}</h1>
               </Grid>
               <Grid item xs="auto" sm="4" md="4"></Grid>
             </Grid>
