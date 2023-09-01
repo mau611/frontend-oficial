@@ -28,6 +28,8 @@ const Formulario = () => {
   const [estadoPago, setEstadoPago] = useState("");
   const [formaPago, setFormaPago] = useState("");
   const [repeticiones, setRepeticiones] = useState([]);
+  const [numerosTarjeta, setNumerosTarjeta] = useState(null);
+  const [pagoTarjeta, setPagoTarjeta] = useState(true);
 
   const getLicenciados = async () => {
     const response = await axios.get(`${endpoint}/profesionales`);
@@ -90,6 +92,7 @@ const Formulario = () => {
       paciente_id: paciente,
       profesional_id: licenciado,
       productos: repeticiones,
+      digitos_tarjeta: numerosTarjeta,
     });
     navigate(0);
   };
@@ -211,7 +214,12 @@ const Formulario = () => {
             id="formaPago"
             label="Forma de Pago"
             value={formaPago}
-            onChange={(e) => setFormaPago(e.target.value)}
+            onChange={(e) => {
+              setFormaPago(e.target.value);
+              e.target.value == "Tarjeta"
+                ? setPagoTarjeta(false)
+                : setPagoTarjeta(true);
+            }}
             hidden={estadoPago == "Pagado" ? false : true}
           >
             <MenuItem value="">
@@ -221,6 +229,15 @@ const Formulario = () => {
             <MenuItem value="Transferencia">Transferencia</MenuItem>
             <MenuItem value="Tarjeta">Tarjeta</MenuItem>
           </Select>
+        </FormControl>
+        <FormControl sx={{ m: 4, minWidth: 200 }}>
+          <TextField
+            hidden={pagoTarjeta}
+            value={numerosTarjeta}
+            id="numTarjeta"
+            label="4 ultimos digitos de la tarjeta"
+            onChange={(e) => setNumerosTarjeta(e.target.value)}
+          />
         </FormControl>
       </div>
       <TextField

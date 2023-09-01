@@ -58,7 +58,9 @@ const TablaProductos = () => {
                 {venta.tipo_pago}
               </TableCell>
               <TableCell component="th" scope="row">
-                {venta.detalles_pago}
+                {venta.tipo_pago == "Tarjeta"
+                  ? venta.digitos_tarjeta
+                  : venta.detalles_pago}
               </TableCell>
             </TableRow>
           ))}

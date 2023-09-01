@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import TodayIcon from "@mui/icons-material/Today";
+import "dayjs/locale/es";
 
 import React, {
   Fragment,
@@ -44,7 +45,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import { CloseButton } from "react-bootstrap";
 import dayjs from "dayjs";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateCalendar, LocalizationProvider, esES } from "@mui/x-date-pickers";
+
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -142,6 +144,8 @@ const AgendaControlada = () => {
   const [selectEventId, setSelectEventId] = useState(0);
   const [profesionales, setProfesionales] = useState([]);
   const [profesionalId, setProfesionalId] = useState("");
+  const [numerosTarjeta, setNumerosTarjeta] = useState(null);
+  const [pagoTarjeta, setPagoTarjeta] = useState(true);
 
   //variables de bonos
   const [nombreBono, setNombreBono] = useState("");
@@ -174,7 +178,7 @@ const AgendaControlada = () => {
       paciente_id: auxPaciente.id,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
 
   const consumirBono = async (bonoId) => {
@@ -183,7 +187,7 @@ const AgendaControlada = () => {
       consulta_id: selectEventId,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
   //fin bono
 
@@ -236,7 +240,8 @@ const AgendaControlada = () => {
 
   const borrarCita = async () => {
     await axios.delete(`${endpoint}/consulta/${selectEventId}`);
-    navigate(0);
+    handleCloseDetallePaciente();
+    getEventosBD();
   };
 
   const handleClickOpen = (detallesEvento) => {
@@ -260,7 +265,7 @@ const AgendaControlada = () => {
     await axios.put(`${endpoint}/consulta/${selectEventId}/${estadoId}`, {
       eId: estadoId,
     });
-    navigate(0);
+    getEventosBD();
   };
 
   const handleCloseDetallePaciente = () => {
@@ -272,6 +277,8 @@ const AgendaControlada = () => {
     setDetallesPago("");
     setTipoDePago("");
     setSelectEventId(0);
+    setPagoTarjeta(true);
+    setNumerosTarjeta(null);
   };
 
   const getPacienteCita = (paciente) => {
@@ -355,6 +362,7 @@ const AgendaControlada = () => {
     setServicios(response.data);
   };
   const getEventosBD = async () => {
+    setEvents([]);
     const response = await axios.get(`${endpoint}/consultas_por_dia/${fecha}`);
     response.data.map((ev) => {
       let nombre = setearNombreEvento(ev);
@@ -425,9 +433,10 @@ const AgendaControlada = () => {
       detalles_pago: detallesPago,
       consulta_id: selectEventId,
       tratamientos: cobroTratamientos,
+      digitos_tarjeta: numerosTarjeta,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
 
   const handleGuardar = async () => {
@@ -448,7 +457,7 @@ const AgendaControlada = () => {
         profesional_id: pi.split(" ")[0],
       });
       handleClose();
-      navigate(0);
+      getEventosBD();
     } catch (error) {
       if (error.response.status === 422) {
         console.log(error.response.data.errors);
@@ -490,7 +499,7 @@ const AgendaControlada = () => {
       end: "" + new Date(end).toISOString(),
       resourceId: resourceId,
     });
-    navigate(0);
+    getEventosBD();
   };
   const moveEvent = useCallback(({ event, start, end, resourceId }) => {
     modificarEvento({ event, start, end, resourceId });
@@ -504,7 +513,7 @@ const AgendaControlada = () => {
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
         <Grid item xs="auto" sm="auto" md="auto">
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
             <DateCalendar
               value={valueCalendar}
               onChange={(newValue) => setFecha(newValue)}
@@ -549,7 +558,7 @@ const AgendaControlada = () => {
               toolbar={false}
               dayLayoutAlgorithm={"no-overlap"}
               min={new Date(1972, 0, 1, 6, 0, 0, 0)}
-              max={new Date(0, 0, 1, 20, 30, 0, 0)}
+              max={new Date(0, 0, 1, 21, 0, 0, 0)}
               step={60}
               messages={messages}
               culture={culture}
@@ -564,7 +573,7 @@ const AgendaControlada = () => {
               endAccessor="end"
               onSelectSlot={handleSelectSlot}
               onSelectEvent={onSelectEvent}
-              style={{ height: 1000, width: "100%" }}
+              style={{ height: 1500, width: "100%" }}
               eventPropGetter={eventPropGetter}
               onEventDrop={moveEvent}
               selectable
@@ -669,7 +678,7 @@ const AgendaControlada = () => {
                   value={detalleTratamiento}
                   id="detallesTratamiento"
                   name="detalles"
-                  placeholder="Mencione los detalles de la consulta"
+                  label="Procedimiento a realizar"
                   multiline
                   fullWidth
                 />
@@ -873,20 +882,32 @@ const AgendaControlada = () => {
                                 id="forma-pago"
                                 label="Tipo Pago"
                                 value={tipoDePago}
-                                onChange={(e) => setTipoDePago(e.target.value)}
+                                onChange={(e) => {
+                                  setTipoDePago(e.target.value);
+                                  e.target.value == "Tarjeta"
+                                    ? setPagoTarjeta(false)
+                                    : setPagoTarjeta(true);
+                                }}
                               >
                                 <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
                                 <MenuItem value={"Transferencia"}>
                                   Transferencia
                                 </MenuItem>
                                 <MenuItem value={"Qr"}>Pago Qr</MenuItem>
-                                <MenuItem value={"Tarjeta de Debito"}>
-                                  Tarjeta de Debito
-                                </MenuItem>
-                                <MenuItem value={"Tarjeta de Credito"}>
-                                  Tarjeta de Credito
-                                </MenuItem>
+                                <MenuItem value={"Tarjeta"}>Tarjeta</MenuItem>
                               </Select>
+                            </FormControl>
+                            <FormControl fullWidth>
+                              <TextField
+                                hidden={pagoTarjeta}
+                                value={numerosTarjeta}
+                                id="numTarjeta"
+                                label="4 ultimos digitos de la tarjeta"
+                                onChange={(e) =>
+                                  setNumerosTarjeta(e.target.value)
+                                }
+                                fullWidth
+                              />
                             </FormControl>
                             <IconButton
                               aria-label="add to favorites"

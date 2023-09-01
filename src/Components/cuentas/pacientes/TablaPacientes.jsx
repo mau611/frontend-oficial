@@ -65,7 +65,9 @@ const TablaPacientes = () => {
                   {factura.forma_pago}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {factura.detalles_pago}
+                  {factura.forma_pago == "Tarjeta"
+                    ? factura.digitos_tarjeta
+                    : factura.detalles_pago}
                 </TableCell>
               </TableRow>
             ))}
@@ -86,11 +88,9 @@ const TablaPacientes = () => {
               "  - Pagos Qr: " +
               detalles[3] +
               " Bs" +
-              "  - Tarjeta de Debito: " +
+              "  - Tarjetas: " +
               detalles[4] +
-              " Bs" +
-              " - Tarjeta de Credito: " +
-              detalles[5]}
+              " Bs"}
           </div>
         </TableFooter>
       </TableContainer>
