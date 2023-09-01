@@ -27,6 +27,7 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -40,8 +41,19 @@ import NavBar from "../estructura/NavBar";
 import { useNavigate } from "react-router-dom";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import { CloseButton } from "react-bootstrap";
+import TodayIcon from "@mui/icons-material/Today";
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
+
+const dias = [
+  "Domingo",
+  "Lunes",
+  "Martes",
+  "Miercoles",
+  "Jueves",
+  "Viernes",
+  "Sabado",
+];
 
 const endpoint = "http://localhost:8000/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -91,7 +103,7 @@ const lang = {
   },
 };
 
-const Agenda = () => {
+const Agenda = ({ fecha, valueCalendar, area, areaId }) => {
   const [culture, setCulture] = useState("es");
   const [gabinetes, setGabinetes] = useState([]);
   const [myEvents, setEvents] = useState([]);
@@ -118,6 +130,8 @@ const Agenda = () => {
   const [selectEventId, setSelectEventId] = useState(0);
   const [profesionales, setProfesionales] = useState([]);
   const [profesionalId, setProfesionalId] = useState("");
+  const [numerosTarjeta, setNumerosTarjeta] = useState(null);
+  const [pagoTarjeta, setPagoTarjeta] = useState(true);
 
   //variables de bonos
   const [nombreBono, setNombreBono] = useState("");
@@ -150,7 +164,7 @@ const Agenda = () => {
       paciente_id: auxPaciente.id,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
 
   const consumirBono = async (bonoId) => {
@@ -159,7 +173,7 @@ const Agenda = () => {
       consulta_id: selectEventId,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
   //fin bono
 
@@ -212,7 +226,8 @@ const Agenda = () => {
 
   const borrarCita = async () => {
     await axios.delete(`${endpoint}/consulta/${selectEventId}`);
-    navigate(0);
+    handleCloseDetallePaciente();
+    getEventosBD();
   };
 
   const handleClickOpen = (detallesEvento) => {
@@ -236,7 +251,7 @@ const Agenda = () => {
     await axios.put(`${endpoint}/consulta/${selectEventId}/${estadoId}`, {
       eId: estadoId,
     });
-    navigate(0);
+    getEventosBD();
   };
 
   const handleCloseDetallePaciente = () => {
@@ -248,6 +263,8 @@ const Agenda = () => {
     setDetallesPago("");
     setTipoDePago("");
     setSelectEventId(0);
+    setPagoTarjeta(true);
+    setNumerosTarjeta(null);
   };
 
   const getPacienteCita = (paciente) => {
@@ -291,7 +308,7 @@ const Agenda = () => {
   };
 
   const getGabinetes = async () => {
-    const response = await axios.get(`${endpoint}/consultorios`);
+    const response = await axios.get(`${endpoint}/consultoriosArea/${areaId}`);
     setGabinetes(response.data);
   };
   const getTipoConsultas = async () => {
@@ -310,7 +327,6 @@ const Agenda = () => {
   useEffect(() => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
-    console.log("effect");
     getGabinetes();
     getPacientes();
     getTipoConsultas();
@@ -331,7 +347,8 @@ const Agenda = () => {
     setServicios(response.data);
   };
   const getEventosBD = async () => {
-    const response = await axios.get(`${endpoint}/consultas`);
+    setEvents([]);
+    const response = await axios.get(`${endpoint}/consultas_por_dia/${fecha}`);
     response.data.map((ev) => {
       let nombre = setearNombreEvento(ev);
       setEvents((prev) => [
@@ -369,7 +386,7 @@ const Agenda = () => {
 
   const { defaultDate, scrollToTime, messages } = useMemo(
     () => ({
-      defaultDate: new Date(),
+      defaultDate: new Date(valueCalendar),
       scrollToTime: new Date(1970, 1, 1, 6),
       messages: lang[culture],
     }),
@@ -377,7 +394,6 @@ const Agenda = () => {
   );
 
   const onSelectEvent = useCallback((calEvent) => {
-    console.log(calEvent);
     /**
      * Here we are waiting 250 milliseconds (use what you want) prior to firing
      * our method. Why? Because both 'click' and 'doubleClick'
@@ -402,9 +418,10 @@ const Agenda = () => {
       detalles_pago: detallesPago,
       consulta_id: selectEventId,
       tratamientos: cobroTratamientos,
+      digitos_tarjeta: numerosTarjeta,
     });
     handleCloseDetallePaciente();
-    navigate(0);
+    getEventosBD();
   };
 
   const handleGuardar = async () => {
@@ -425,7 +442,7 @@ const Agenda = () => {
         profesional_id: pi.split(" ")[0],
       });
       handleClose();
-      navigate(0);
+      getEventosBD();
     } catch (error) {
       if (error.response.status === 422) {
         console.log(error.response.data.errors);
@@ -467,432 +484,525 @@ const Agenda = () => {
       end: "" + new Date(end).toISOString(),
       resourceId: resourceId,
     });
-    navigate(0);
+    getEventosBD();
   };
   const moveEvent = useCallback(({ event, start, end, resourceId }) => {
     modificarEvento({ event, start, end, resourceId });
   }, []);
 
   return (
-    <NavBar>
-      <h1>Agenda</h1>
-      <hr />
-      <Fragment>
-        <DragAndDropCalendar
-          dayLayoutAlgorithm={"no-overlap"}
-          views={["day", "month", "agenda"]}
-          min={new Date(1972, 0, 1, 6, 0, 0, 0)}
-          max={new Date(0, 0, 1, 20, 30, 0, 0)}
-          step={60}
-          messages={messages}
-          culture={culture}
-          resourceTitleAccessor={"nombre"}
-          resources={gabinetes}
-          onEventResize={resizeEvent}
-          events={myEvents}
-          defaultDate={defaultDate}
-          defaultView={Views.DAY}
-          localizer={localizer}
-          startAccessor="start"
-          endAccessor="end"
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={onSelectEvent}
-          style={{ height: 1000 }}
-          eventPropGetter={eventPropGetter}
-          onEventDrop={moveEvent}
-          selectable
-          popup
-          resourceIdAccessor="id"
-          timeslots={1}
-        />
+    <Fragment>
+      <Grid container>
+        <Grid item xs="auto" sm="4" md="4">
+          <Button
+            variant="outlined"
+            startIcon={<TodayIcon />}
+            sx={{ color: "#155E30", borderColor: "#155E30" }}
+            onClick={() =>
+              (window.location = `/agenda/${
+                new Date().getFullYear() +
+                "-" +
+                (new Date().getMonth() + 1) +
+                "-" +
+                new Date().getDate()
+              }/${area}/${areaId}`)
+            }
+          >
+            Hoy
+          </Button>
+        </Grid>
+        <Grid item xs="auto" sm="4" md="4" className="text-center">
+          <h1>{dias[new Date(fecha).getDay()]}</h1>
+        </Grid>
+        <Grid item xs="auto" sm="4" md="4"></Grid>
+      </Grid>
+      <DragAndDropCalendar
+        views={{
+          month: false,
+          week: false,
+          day: true,
+          agenda: true,
+          action: false,
+          navigate: false,
+        }}
+        toolbar={false}
+        dayLayoutAlgorithm={"no-overlap"}
+        min={new Date(1972, 0, 1, 6, 0, 0, 0)}
+        max={new Date(0, 0, 1, 21, 0, 0, 0)}
+        step={60}
+        messages={messages}
+        culture={culture}
+        resourceTitleAccessor={"nombre"}
+        resources={gabinetes}
+        onEventResize={resizeEvent}
+        events={myEvents}
+        defaultDate={defaultDate}
+        defaultView={Views.DAY}
+        localizer={localizer}
+        startAccessor="start"
+        endAccessor="end"
+        onSelectSlot={handleSelectSlot}
+        onSelectEvent={onSelectEvent}
+        style={{ height: 1500, width: "100%" }}
+        eventPropGetter={eventPropGetter}
+        onEventDrop={moveEvent}
+        selectable
+        popup
+        resourceIdAccessor="id"
+        timeslots={1}
+      />
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+        fullWidth={true}
+        maxWidth={"sm"}
+      >
+        <DialogTitle style={{ backgroundColor: "#155E30", color: "white" }}>
+          {"Agendar cita"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            En esta ventana podr&aacute;s agendar una cita.
+          </DialogContentText>
+          <br />
+          <Autocomplete
+            required
+            freeSolo
+            id="pacientes"
+            value={paciente}
+            onChange={(e, value) => setPaciente(value)}
+            disableClearable
+            options={pacientes.map(
+              (option) =>
+                option.id + " -  " + option.nombres + " " + option.apellidos
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Paciente"
+                InputProps={{
+                  ...params.InputProps,
+                  type: "search",
+                }}
+              />
+            )}
+          />
+          {pacienteError && (
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                color: "#DC2626",
+              }}
+            >
+              {pacienteError}
+            </p>
+          )}
+          <br />
+          <Autocomplete
+            required
+            freeSolo
+            id="TipoConsulta"
+            value={tipoConsulta}
+            onChange={(e, value) => setTipoConsulta(value)}
+            disableClearable
+            options={tipoConsultas.map(
+              (option) => option.id + " -  " + option.nombre
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Tipo consulta"
+                InputProps={{
+                  ...params.InputProps,
+                  type: "search",
+                }}
+              />
+            )}
+          />
+          {tipoConsultaError && (
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                color: "#DC2626",
+              }}
+            >
+              {tipoConsultaError}
+            </p>
+          )}
+          <br />
+          <TextField
+            required
+            onChange={(e) => setDetalleTratamiento(e.target.value)}
+            value={detalleTratamiento}
+            id="detallesTratamiento"
+            name="detalles"
+            label="Procedimiento a realizar"
+            multiline
+            fullWidth
+          />
+          {detallesError && (
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                color: "#DC2626",
+              }}
+            >
+              {detallesError}
+            </p>
+          )}
+          <br />
+          <br />
+          <Autocomplete
+            required
+            freeSolo
+            id="estadoCita"
+            value={estadoCita}
+            onChange={(e, value) => setEstadoCita(value)}
+            disableClearable
+            options={estadoCitas.map(
+              (option) => option.id + " -  " + option.estado
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Estado de la cita"
+                InputProps={{
+                  ...params.InputProps,
+                  type: "search",
+                }}
+              />
+            )}
+          />
+          {estadoCitaError && (
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                color: "#DC2626",
+              }}
+            >
+              {estadoCitaError}
+            </p>
+          )}
+          <br />
+          <Autocomplete
+            required
+            freeSolo
+            id="agendadoPor"
+            value={profesionalId}
+            onChange={(e, value) => setProfesionalId(value)}
+            disableClearable
+            options={profesionales.map(
+              (option) => option.id + " -  " + option.nombre
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Agendado por:"
+                InputProps={{
+                  ...params.InputProps,
+                  type: "search",
+                }}
+              />
+            )}
+          />
+          {agendadoPorError && (
+            <p
+              style={{
+                fontSize: "0.875rem",
+                lineHeight: "1.25rem",
+                color: "#DC2626",
+              }}
+            >
+              {agendadoPorError}
+            </p>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button onClick={handleGuardar}>Guardar Cita</Button>
+        </DialogActions>
+      </Dialog>
+      <div>
         <Dialog
           fullScreen={fullScreen}
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleClose}
-          aria-describedby="alert-dialog-slide-description"
-          fullWidth={true}
-          maxWidth={"sm"}
+          open={openDetallePaciente}
+          onClose={handleCloseDetallePaciente}
         >
-          <DialogTitle style={{ backgroundColor: "#155E30", color: "white" }}>
-            {"Agendar cita"}
+          <DialogTitle>
+            <Container>
+              <Row>
+                <Col xs={9}>
+                  {auxPaciente.nombres} {auxPaciente.apellidos}
+                </Col>
+                <Col xs={3}>
+                  <ButtonB
+                    variant="danger"
+                    style={{ width: "100px", fontSize: 12 }}
+                    onClick={() => borrarCita()}
+                  >
+                    Eliminar Cita
+                  </ButtonB>
+                </Col>
+              </Row>
+            </Container>
+
+            <hr />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Estado cita:
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="estado"
+                value={auxEstado.id}
+                onChange={(e) => cambiarEstadoCita(e.target.value)}
+              >
+                {estadoCitas.map((option) => (
+                  <MenuItem value={option.id}>{option.estado}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              En esta ventana podr&aacute;s agendar una cita.
-            </DialogContentText>
-            <br />
-            <Autocomplete
-              required
-              freeSolo
-              id="pacientes"
-              value={paciente}
-              onChange={(e, value) => setPaciente(value)}
-              disableClearable
-              options={pacientes.map(
-                (option) =>
-                  option.id + " -  " + option.nombres + " " + option.apellidos
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Paciente"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
-                />
-              )}
-            />
-            {pacienteError && (
-              <p className="text-sm text-red-600">{pacienteError}</p>
-            )}
-            <br />
-            <Autocomplete
-              required
-              freeSolo
-              id="TipoConsulta"
-              value={tipoConsulta}
-              onChange={(e, value) => setTipoConsulta(value)}
-              disableClearable
-              options={tipoConsultas.map(
-                (option) => option.id + " -  " + option.nombre
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Tipo consulta"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
-                />
-              )}
-            />
-            {tipoConsultaError && (
-              <p className="text-sm text-red-600">{tipoConsultaError}</p>
-            )}
-            <br />
-            <TextField
-              required
-              onChange={(e) => setDetalleTratamiento(e.target.value)}
-              value={detalleTratamiento}
-              id="detallesTratamiento"
-              name="detalles"
-              placeholder="Mencione los detalles de la consulta"
-              multiline
-              fullWidth
-            />
-            {detallesError && (
-              <p className="text-sm text-red-600">{detallesError}</p>
-            )}
-            <br />
-            <br />
-            <Autocomplete
-              required
-              freeSolo
-              id="estadoCita"
-              value={estadoCita}
-              onChange={(e, value) => setEstadoCita(value)}
-              disableClearable
-              options={estadoCitas.map(
-                (option) => option.id + " -  " + option.estado
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Estado de la cita"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
-                />
-              )}
-            />
-            {estadoCitaError && (
-              <p className="text-sm text-red-600">{estadoCitaError}</p>
-            )}
-            <br />
-            <Autocomplete
-              required
-              freeSolo
-              id="agendadoPor"
-              value={profesionalId}
-              onChange={(e, value) => setProfesionalId(value)}
-              disableClearable
-              options={profesionales.map(
-                (option) => option.id + " -  " + option.nombre
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Agendado por:"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: "search",
-                  }}
-                />
-              )}
-            />
-            {agendadoPorError && (
-              <p className="text-sm text-red-600">{agendadoPorError}</p>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancelar</Button>
-            <Button onClick={handleGuardar}>Guardar Cita</Button>
-          </DialogActions>
-        </Dialog>
-        <div>
-          <Dialog
-            fullScreen={fullScreen}
-            open={openDetallePaciente}
-            onClose={handleCloseDetallePaciente}
-          >
-            <DialogTitle>
-              <Container>
-                <Row>
-                  <Col xs={9}>
-                    {auxPaciente.nombres} {auxPaciente.apellidos}
-                  </Col>
-                  <Col xs={3}>
-                    <ButtonB
-                      variant="danger"
-                      style={{ width: "100px", fontSize: 12 }}
-                      onClick={() => borrarCita()}
+            <Accordion style={{ width: "500px" }}>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Cobrar Servicio</Accordion.Header>
+                <Accordion.Body>
+                  <br />
+                  <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 400 }}>
+                    <InputLabel shrink htmlFor="select-multiple-native">
+                      Servicios
+                    </InputLabel>
+                    <Select
+                      multiple
+                      native
+                      value={cobroTratamientos}
+                      // @ts-ignore Typings are not considering `native`
+                      onChange={handleChangeMultiple}
+                      label="Servicios"
+                      inputProps={{
+                        id: "select-multiple-native",
+                      }}
                     >
-                      Eliminar Cita
-                    </ButtonB>
-                  </Col>
-                </Row>
-              </Container>
-
-              <hr />
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Estado cita:
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="estado"
-                  value={auxEstado.id}
-                  onChange={(e) => cambiarEstadoCita(e.target.value)}
-                >
-                  {estadoCitas.map((option) => (
-                    <MenuItem value={option.id}>{option.estado}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </DialogTitle>
-            <DialogContent>
-              <Accordion style={{ width: "500px" }}>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>Facturas</Accordion.Header>
-                  <Accordion.Body>
-                    <Table striped bordered hover size="sm">
-                      <thead>
-                        <tr>
-                          <th>Factura No</th>
-                          <th>Total</th>
-                          <th>Estado pago</th>
-                          <th>Detalles</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {auxFacturas.map((factura) => (
-                          <tr>
-                            <td>{factura.numero}</td>
-                            <td>{factura.total} Bs</td>
-                            <td>{factura.estado_pago}</td>
-                            <td>{factura.detalles_pago}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Accordion.Body>
-                </Accordion.Item>
-                <Accordion.Item eventKey="1">
-                  <Accordion.Header>Bonos</Accordion.Header>
-                  <Accordion.Body>
+                      {servicios.map((servicio) => (
+                        <option key={servicio.id} value={servicio.id}>
+                          {servicio.servicio}
+                        </option>
+                      ))}
+                    </Select>
                     <br />
                     <div>
-                      {auxPaciente.bonos == undefined ? (
-                        "nada"
-                      ) : (
-                        <Container>
-                          Sesiones paciente:
-                          {auxPaciente.bonos.map((bono) => (
-                            <Row>
-                              <Col>
-                                {bono.nombre} x{bono.sesiones}
-                              </Col>
-                              <Col>Restantes: {bono.restantes}</Col>
-                              {bono.restantes > 0 ? (
-                                <Col>
-                                  <ButtonB
-                                    style={{ width: "70%" }}
-                                    size="sm"
-                                    variant="link"
-                                    onClick={() => consumirBono(bono.id)}
-                                  >
-                                    Consumir
-                                  </ButtonB>
-                                </Col>
-                              ) : (
-                                <Col>
-                                  <ButtonB
-                                    style={{ width: "100%" }}
-                                    size="sm"
-                                    variant="outline-secondary"
-                                    disabled
-                                  >
-                                    Bono consumido
-                                  </ButtonB>
-                                </Col>
-                              )}
-                              <hr />
-                            </Row>
-                          ))}
-                        </Container>
-                      )}
-                      <br />
-                    </div>
-                    <div>
                       <TextField
+                        disabled
                         id="outlined-basic"
-                        label="Nombre"
-                        variant="outlined"
-                        style={{ width: 200 }}
-                        value={nombreBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "nombreBono")
-                        }
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Sesiones"
-                        type={"number"}
-                        variant="outlined"
-                        style={{ width: 110 }}
-                        value={sesionesBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "sesionesBono")
-                        }
-                      />
-                      <TextField
-                        id="outlined-basic"
-                        label="Monto"
+                        label="Costo de la Sesion"
                         variant="outlined"
                         style={{ width: 100 }}
-                        value={costoBono}
-                        onChange={(e) =>
-                          setValoresBono(e.target.value, "costoBono")
-                        }
+                        value={cobro}
                       />
-                      <IconButton aria-label="add to favorites">
-                        <PriceCheckIcon onClick={crearBono} />
-                      </IconButton>
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
-                <Accordion.Item eventKey="2">
-                  <Accordion.Header>Facturar</Accordion.Header>
-                  <Accordion.Body>
-                    <br />
-                    <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 400 }}>
-                      <InputLabel shrink htmlFor="select-multiple-native">
-                        Servicios
-                      </InputLabel>
-                      <Select
-                        multiple
-                        native
-                        value={cobroTratamientos}
-                        // @ts-ignore Typings are not considering `native`
-                        onChange={handleChangeMultiple}
-                        label="Servicios"
-                        inputProps={{
-                          id: "select-multiple-native",
-                        }}
-                      >
-                        {servicios.map((servicio) => (
-                          <option key={servicio.id} value={servicio.id}>
-                            {servicio.servicio}
-                          </option>
-                        ))}
-                      </Select>
-                      <br />
-                      <div>
+                      <FormControl style={{ width: 200 }}>
+                        <InputLabel id="estado-pago">Estado Pago</InputLabel>
+                        <Select
+                          labelId="estado-pago"
+                          id="estado-pago"
+                          label="Age"
+                          value={estadoPago}
+                          onChange={(e) => setEstadoPago(e.target.value)}
+                        >
+                          <MenuItem value={"pagado"}>Pagado</MenuItem>
+                          <MenuItem value={"no pagado"}>No pagado</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        value={detallesPago}
+                        id="outlined-multiline-static"
+                        label="Detalles del pago"
+                        multiline
+                        rows={3}
+                        onChange={(e) => setDetallesPago(e.target.value)}
+                        fullWidth
+                      />
+                      <FormControl fullWidth>
+                        <InputLabel id="forma-pago">Tipo de Pago</InputLabel>
+                        <Select
+                          labelId="forma-pago"
+                          id="forma-pago"
+                          label="Tipo Pago"
+                          value={tipoDePago}
+                          onChange={(e) => {
+                            setTipoDePago(e.target.value);
+                            e.target.value == "Tarjeta"
+                              ? setPagoTarjeta(false)
+                              : setPagoTarjeta(true);
+                          }}
+                        >
+                          <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
+                          <MenuItem value={"Transferencia"}>
+                            Transferencia
+                          </MenuItem>
+                          <MenuItem value={"Qr"}>Pago Qr</MenuItem>
+                          <MenuItem value={"Tarjeta"}>Tarjeta</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <FormControl fullWidth>
                         <TextField
-                          disabled
-                          id="outlined-basic"
-                          label="Costo de la Sesion"
-                          variant="outlined"
-                          style={{ width: 100 }}
-                          value={cobro}
-                        />
-                        <FormControl style={{ width: 200 }}>
-                          <InputLabel id="estado-pago">Estado Pago</InputLabel>
-                          <Select
-                            labelId="estado-pago"
-                            id="estado-pago"
-                            label="Age"
-                            value={estadoPago}
-                            onChange={(e) => setEstadoPago(e.target.value)}
-                          >
-                            <MenuItem value={"pagado"}>Pagado</MenuItem>
-                            <MenuItem value={"no pagado"}>No pagado</MenuItem>
-                          </Select>
-                        </FormControl>
-                        <TextField
-                          value={detallesPago}
-                          id="outlined-multiline-static"
-                          label="Detalles del pago"
-                          multiline
-                          rows={3}
-                          onChange={(e) => setDetallesPago(e.target.value)}
+                          hidden={pagoTarjeta}
+                          value={numerosTarjeta}
+                          id="numTarjeta"
+                          label="4 ultimos digitos de la tarjeta"
+                          onChange={(e) => setNumerosTarjeta(e.target.value)}
                           fullWidth
                         />
-                        <FormControl fullWidth>
-                          <InputLabel id="forma-pago">Tipo de Pago</InputLabel>
-                          <Select
-                            labelId="forma-pago"
-                            id="forma-pago"
-                            label="Tipo Pago"
-                            value={tipoDePago}
-                            onChange={(e) => setTipoDePago(e.target.value)}
-                          >
-                            <MenuItem value={"Efectivo"}>Efectivo</MenuItem>
-                            <MenuItem value={"Transferencia"}>
-                              Transferencia
-                            </MenuItem>
-                            <MenuItem value={"Tarjeta de Debito"}>
-                              Tarjeta de Debito
-                            </MenuItem>
-                            <MenuItem value={"Bono"}>Bono</MenuItem>
-                          </Select>
-                        </FormControl>
-                        <IconButton
-                          aria-label="add to favorites"
-                          onClick={realizarCobro}
-                        >
-                          <PriceCheckIcon />
-                          Realizar cobro
-                        </IconButton>
-                      </div>
-                    </FormControl>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDetallePaciente}>Cancelar</Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Fragment>
-    </NavBar>
+                      </FormControl>
+                      <IconButton
+                        aria-label="add to favorites"
+                        onClick={realizarCobro}
+                      >
+                        <PriceCheckIcon />
+                        Realizar cobro
+                      </IconButton>
+                    </div>
+                  </FormControl>
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="1">
+                <Accordion.Header>Bonos</Accordion.Header>
+                <Accordion.Body>
+                  <br />
+                  <div>
+                    {auxPaciente.bonos == undefined ? (
+                      "nada"
+                    ) : (
+                      <Container>
+                        Sesiones paciente:
+                        {auxPaciente.bonos.map((bono) => (
+                          <Row>
+                            <Col>
+                              {bono.nombre} x{bono.sesiones}
+                            </Col>
+                            <Col>Restantes: {bono.restantes}</Col>
+                            {bono.restantes > 0 ? (
+                              <Col>
+                                <ButtonB
+                                  style={{ width: "70%" }}
+                                  size="sm"
+                                  variant="link"
+                                  onClick={() => consumirBono(bono.id)}
+                                >
+                                  Consumir
+                                </ButtonB>
+                              </Col>
+                            ) : (
+                              <Col>
+                                <ButtonB
+                                  style={{ width: "100%" }}
+                                  size="sm"
+                                  variant="outline-secondary"
+                                  disabled
+                                >
+                                  Bono consumido
+                                </ButtonB>
+                              </Col>
+                            )}
+                            <hr />
+                          </Row>
+                        ))}
+                      </Container>
+                    )}
+                    <br />
+                  </div>
+                  <div>
+                    <Select
+                      labelId="Nombre"
+                      id="nombre"
+                      variant="outlined"
+                      style={{ width: 200 }}
+                      value={nombreBono}
+                      label="Nombre"
+                      onChange={(e) =>
+                        setValoresBono(e.target.value, "nombreBono")
+                      }
+                    >
+                      <MenuItem value={"Paquete post quirurgico"}>
+                        Paquete post quirurgico
+                      </MenuItem>
+                      <MenuItem value={"Sesiones"}>Sesiones</MenuItem>
+                      <MenuItem value={"Pago adelantado"}>
+                        Pago adelantado
+                      </MenuItem>
+                    </Select>
+                    <TextField
+                      id="outlined-basic"
+                      label="Sesiones"
+                      type={"number"}
+                      variant="outlined"
+                      style={{ width: 110 }}
+                      value={sesionesBono}
+                      onChange={(e) =>
+                        setValoresBono(e.target.value, "sesionesBono")
+                      }
+                    />
+                    <TextField
+                      id="outlined-basic"
+                      label="Monto"
+                      variant="outlined"
+                      style={{ width: 100 }}
+                      value={costoBono}
+                      onChange={(e) =>
+                        setValoresBono(e.target.value, "costoBono")
+                      }
+                    />
+                    <IconButton aria-label="add to favorites">
+                      <PriceCheckIcon onClick={crearBono} />
+                    </IconButton>
+                  </div>
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="2">
+                <Accordion.Header>Cobros de la cita</Accordion.Header>
+                <Accordion.Body>
+                  <Table striped bordered hover size="sm">
+                    <thead>
+                      <tr>
+                        <th>Factura No</th>
+                        <th>Total</th>
+                        <th>Estado pago</th>
+                        <th>Detalles</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {auxFacturas.map((factura) => (
+                        <tr>
+                          <td>{factura.numero}</td>
+                          <td>{factura.total} Bs</td>
+                          <td>{factura.estado_pago}</td>
+                          <td>{factura.detalles_pago}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Accordion.Body>
+              </Accordion.Item>
+              <Accordion.Item eventKey="3">
+                <Accordion.Header>Historial de pagos</Accordion.Header>
+              </Accordion.Item>
+            </Accordion>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDetallePaciente}>Cancelar</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </Fragment>
   );
 };
 

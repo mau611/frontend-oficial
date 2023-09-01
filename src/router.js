@@ -5,7 +5,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ProtectedLayout from "./Components/ProtectedLayout";
 import GuestLayout from "./Components/GuestLayout";
-import Inicio from "./Components/estructura/inicio";
+import Inicio from "./Components/estructura/Inicio";
 import Agenda from "./Components/agenda/Agenda";
 import Pacientes from "./Components/pacientes/Pacientes";
 import Clinica from "./Components/clinica/Clinica";
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
         element: <Inicio />,
       },
       {
-        path: "/agenda/:fecha",
+        path: "/agenda/:fecha/:area/:id",
         //element: <Agenda />,
         element: <AgendaControlada />,
       },

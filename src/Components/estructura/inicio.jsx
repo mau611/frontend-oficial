@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./css/inicio.css";
 import { Link } from "react-router-dom";
 import logo from "./../../shanti_transparencia.png";
 
-const inicio = () => {
+const Inicio = () => {
   const valorFecha = new Date();
   const fecha =
     valorFecha.getFullYear() +
@@ -21,7 +21,7 @@ const inicio = () => {
         <div className="row">
           <div className="col-lg-3">
             <Link
-              to={`/agenda/${fecha}`}
+              to={`/agenda/${fecha}/area/1`}
               className="btn btn-outline-light btn-lg"
             >
               Agenda
@@ -70,4 +70,4 @@ const inicio = () => {
   );
 };
 
-export default inicio;
+export default Inicio;

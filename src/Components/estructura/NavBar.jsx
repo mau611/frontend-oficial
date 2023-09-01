@@ -124,6 +124,14 @@ export default function NavBar({ children, titulo }) {
   const [ciError, setCiError] = React.useState(null);
   const [sexoError, setSexoError] = React.useState(null);
   const [direccionError, setDireccionError] = React.useState(null);
+  const [areas, setAreas] = React.useState([]);
+  const getAreas = async () => {
+    const response = await axios.get(`${endpoint}/areas`);
+    setAreas(response.data);
+  };
+  useEffect(() => {
+    getAreas();
+  }, []);
   const valorFecha = new Date();
   const fecha =
     valorFecha.getFullYear() +
@@ -323,7 +331,7 @@ export default function NavBar({ children, titulo }) {
                   (new Date().getMonth() + 1) +
                   "-" +
                   new Date().getDate()
-                }`)
+                }/${fecha}/area/1`)
               }
             >
               Agenda
@@ -365,7 +373,7 @@ export default function NavBar({ children, titulo }) {
                             (new Date().getMonth() + 1) +
                             "-" +
                             new Date().getDate()
-                          }`)
+                          }/${fecha}/area/1`)
                         }
                       >
                         <TodayIcon />
