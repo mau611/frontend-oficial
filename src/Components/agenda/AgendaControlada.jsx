@@ -18,7 +18,6 @@ const endpoint = "http://localhost:8000/api";
 const AgendaControlada = () => {
   const { fecha, area, id } = useParams();
   const [valueCalendar, setValueCalendar] = useState(dayjs("" + fecha));
-  const [consultorios, setConsultorios] = useState([]);
   const setFecha = (newValue) => {
     let yyyy = newValue.$y;
     let mm = newValue.$M + 1;
@@ -57,7 +56,7 @@ const AgendaControlada = () => {
             <div>
               {" "}
               <Button
-                sx={{ color: "#155E30" }}
+                sx={{ color: "#155E30", borderColor: "#155E30" }}
                 onClick={() =>
                   (window.location = `/agenda/${fecha}/${area.nombre}/${area.id}`)
                 }

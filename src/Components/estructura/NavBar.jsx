@@ -124,14 +124,8 @@ export default function NavBar({ children, titulo }) {
   const [ciError, setCiError] = React.useState(null);
   const [sexoError, setSexoError] = React.useState(null);
   const [direccionError, setDireccionError] = React.useState(null);
-  const [areas, setAreas] = React.useState([]);
-  const getAreas = async () => {
-    const response = await axios.get(`${endpoint}/areas`);
-    setAreas(response.data);
-  };
-  useEffect(() => {
-    getAreas();
-  }, []);
+  const [referenciaError, setReferenciaError] = React.useState(null);
+
   const valorFecha = new Date();
   const fecha =
     valorFecha.getFullYear() +
@@ -148,6 +142,7 @@ export default function NavBar({ children, titulo }) {
     ci: "",
     sexo: "",
     direccion: "",
+    referencia: "",
   });
   const navigate = useNavigate();
 
@@ -169,6 +164,7 @@ export default function NavBar({ children, titulo }) {
     setCiError("");
     setSexoError("");
     setDireccionError("");
+    setReferenciaError("");
     setOpenModal(false);
   };
 
@@ -187,7 +183,13 @@ export default function NavBar({ children, titulo }) {
         ci: state.ci,
         sexo: state.sexo,
         direccion: state.direccion,
-        fecha_registro: "1996/05/4",
+        referencia: state.referencia,
+        fecha_registro:
+          new Date().getFullYear() +
+          "/" +
+          (new Date().getMonth() + 1) +
+          "/" +
+          new Date().getDate(),
       });
       navigate(0);
     } catch (error) {
@@ -331,7 +333,7 @@ export default function NavBar({ children, titulo }) {
                   (new Date().getMonth() + 1) +
                   "-" +
                   new Date().getDate()
-                }/${fecha}/area/1`)
+                }/area/1`)
               }
             >
               Agenda
@@ -373,7 +375,7 @@ export default function NavBar({ children, titulo }) {
                             (new Date().getMonth() + 1) +
                             "-" +
                             new Date().getDate()
-                          }/${fecha}/area/1`)
+                          }/area/1`)
                         }
                       >
                         <TodayIcon />
@@ -590,6 +592,20 @@ export default function NavBar({ children, titulo }) {
                 required
                 variant="standard"
                 onChange={(e) => handleChange(e.target.value, "direccion")}
+              />
+              <TextField
+                helperText={referenciaError}
+                error={referenciaError ? true : false}
+                autoFocus
+                margin="dense"
+                id="referencia"
+                name="referencia"
+                label="Como nos conoció"
+                type="text"
+                fullWidth
+                required
+                variant="standard"
+                onChange={(e) => handleChange(e.target.value, "referencia")}
               />
             </DialogContent>
             <DialogActions>

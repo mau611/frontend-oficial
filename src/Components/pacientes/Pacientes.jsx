@@ -12,6 +12,7 @@ const columnas = [
   { field: "ci", headerName: "Carnet", width: 130 },
   { field: "sexo", headerName: "Sexo", width: 130 },
   { field: "direccion", headerName: "Direccion", width: 400 },
+  { field: "referencia", headerName: "Como nos conocio?", width: 400 },
 ];
 const endpoint = "http://localhost:8000/api";
 
@@ -30,7 +31,7 @@ export const Pacientes = () => {
     <NavBar>
       <h1>Lista de Pacientes</h1>
       <br />
-      <div style={{ height: 600, width: "100%" }}>
+      <div style={{ height: 500, width: "100%" }}>
         <DataGrid
           onRowClick={(e) => window.open(`/paciente/${e.row.id}`, "_blank")}
           rows={pacientes}
