@@ -44,6 +44,7 @@ const AgendaControlada = () => {
         container
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
+        sx={[{ zoom: "85%" }]}
       >
         <Grid item xs="auto" sm="auto" md="auto">
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
@@ -67,7 +68,7 @@ const AgendaControlada = () => {
             </div>
           ))}
         </Grid>
-        <Grid item xs="auto" sm="9" md="9">
+        <Grid item xs="auto" sm="9" md="9" sx={[{ zoom: "90%" }]}>
           <Agenda
             fecha={fecha}
             valueCalendar={valueCalendar}

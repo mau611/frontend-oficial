@@ -33,6 +33,8 @@ import {
   MenuItem,
   Select,
   Slide,
+  Tab,
+  Tabs,
   TextField,
   useMediaQuery,
   useTheme,
@@ -42,6 +44,8 @@ import { useNavigate } from "react-router-dom";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import { CloseButton } from "react-bootstrap";
 import TodayIcon from "@mui/icons-material/Today";
+import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 require("globalize/lib/cultures/globalize.culture.es");
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -490,6 +494,12 @@ const Agenda = ({ fecha, valueCalendar, area, areaId }) => {
     modificarEvento({ event, start, end, resourceId });
   }, []);
 
+  const [tabAgendar, setTabAgendar] = React.useState(0);
+
+  const handleChangeTabAgendar = (event, newValue) => {
+    setTabAgendar(newValue);
+  };
+
   return (
     <Fragment>
       <Grid container>
@@ -565,6 +575,22 @@ const Agenda = ({ fecha, valueCalendar, area, areaId }) => {
           {"Agendar cita"}
         </DialogTitle>
         <DialogContent>
+          <Tabs
+            value={tabAgendar}
+            onChange={handleChangeTabAgendar}
+            aria-label="icon position tabs example"
+          >
+            <Tab
+              icon={<PermContactCalendarIcon />}
+              iconPosition="start"
+              label="Paciente existente"
+            />
+            <Tab
+              icon={<PersonAddAlt1Icon />}
+              iconPosition="start"
+              label="Nuevo paciente"
+            />
+          </Tabs>
           <DialogContentText id="alert-dialog-slide-description">
             En esta ventana podr&aacute;s agendar una cita.
           </DialogContentText>
