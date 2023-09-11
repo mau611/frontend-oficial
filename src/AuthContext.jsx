@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   // csrf token generation for guest methods
   const csrfToken = async () => {
-    await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+    await axios.get("http://scapi.shantispawellnesslife.com/sanctum/csrf-cookie");
     return true;
   };
 

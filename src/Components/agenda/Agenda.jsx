@@ -59,7 +59,7 @@ const dias = [
   "Sabado",
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

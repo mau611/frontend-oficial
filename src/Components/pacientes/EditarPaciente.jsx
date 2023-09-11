@@ -15,7 +15,7 @@ export const EditarPaciente = () => {
   const [sexo, setSexo] = useState("");
   const [direccion, setDireccion] = useState("");
   const { id } = useParams();
-  const endpoint = "http://localhost:8000/api";
+  const endpoint = "http://scapi.shantispawellnesslife.com/api";
   const navigate = useNavigate();
 
   useEffect(() => {

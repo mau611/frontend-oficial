@@ -4,7 +4,7 @@ import { Button, Card, CardContent, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 
 const UsoGabinete = () => {
   const navigate = useNavigate();

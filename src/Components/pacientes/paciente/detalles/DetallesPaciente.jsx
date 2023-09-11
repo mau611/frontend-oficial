@@ -33,7 +33,7 @@ const actions = [
   { icon: <FormatListNumberedIcon />, name: "Agregar Tratamiento", option: 2 },
 ];
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 
 const DetallesPaciente = ({ diagnosticos, paciente_id, profesionales }) => {
   const [openDx, setOpenDx] = React.useState(false);

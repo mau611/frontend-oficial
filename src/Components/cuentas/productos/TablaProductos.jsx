@@ -13,7 +13,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 
 const TablaProductos = () => {
   const [ventas, setVentas] = useState([]);

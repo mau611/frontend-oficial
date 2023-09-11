@@ -21,7 +21,7 @@ import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Link } from "react-router-dom";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 
 const ProductosUso = () => {
   const [productos, setProductos] = useState([]);

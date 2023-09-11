@@ -13,7 +13,7 @@ import { DateCalendar, LocalizationProvider, esES } from "@mui/x-date-pickers";
 import { useParams } from "react-router-dom";
 import Agenda from "./Agenda";
 
-const endpoint = "http://localhost:8000/api";
+const endpoint = "http://scapi.shantispawellnesslife.com/api";
 
 const AgendaControlada = () => {
   const { fecha, area, id } = useParams();
